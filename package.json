@@ -26,5 +26,8 @@
   "homepage": "https://github.com/jmicmoore/react-redux-simple-bootstrap#readme",
   "dependencies": {
     "express": "^4.14.0"
+  },
+  "devDependencies": {
+    "webpack": "^1.14.0"
   }
 }

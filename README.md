@@ -42,7 +42,7 @@ Follow tags to create from scratch
 
 **Tag "v1.0.2" - Serving a static file with Express**
 
-1. From the command line, add Express
+1. From the command line, install Express
     * ```npm install express --save```
     * node_modules folder is created
     * express is added to the "dependencies" section of package.json
@@ -100,6 +100,40 @@ Follow tags to create from scratch
 1. Right now there is no bundling or hot reloading, so all changes require a restart of the server.  We'll fix that next.
 
 
+**Tag "v1.0.3" - Using Webpack to Create a Modular JavaScript Project**
+
+1. From the command line, install Webpack and save to Dev dependencies
+    * ```npm install webpack --save-dev```
+    * webpack is added to the "devDependencies" section of package.json
+    
+1. Create your bundle with Webpack manually
+    * In the src/client folder, create a file called index.js and add the following:
+    ```javascript
+       console.log("Hello World from the Client!");
+    ```
+    * ```webpack ./src/client/index.js ./bin/bundle.js```
+    
+1. Test from the command line
+    * ```node bin/bundle.js```
+    * You should see "Hello World from the Client!" on the command line.
+    
+1. Now, we'll add more permanent configuration.  Create the webpack.config.js file in the root folder and add the following:
+
+    ```javascript
+     module.exports = {
+         entry: './src/client/index.js',
+         output: {
+             path: './bin',
+             filename: 'bundle.js'
+         }
+     };
+    ```
+1. Bundle the project
+    * ```webpack```
+    
+1. Test from the command line
+    * ```node bin/bundle.js```
+    * You should see "Hello World from the Client!" on the command line.
     
 **Troubleshooting**
 
