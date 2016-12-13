@@ -1,0 +1,27 @@
+{
+  "name": "react-redux-simple-bootstrap",
+  "version": "1.0.0",
+  "description": "Minimal React bootstrap with Redux and hot loading",
+  "main": "server.js",
+  "scripts": {
+    "local": "node ./src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmicmoore/react-redux-simple-bootstrap.git"
+  },
+  "keywords": [
+    "react",
+    "redux",
+    "hotloading",
+    "webpack",
+    "bootstrap"
+  ],
+  "author": "Jerry Moore <jmicmoore@gmail.com> (https://like.what.ever)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jmicmoore/react-redux-simple-bootstrap/issues"
+  },
+  "homepage": "https://github.com/jmicmoore/react-redux-simple-bootstrap#readme"
+}
