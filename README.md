@@ -4,3 +4,5 @@ Minimal React bootstrap with Redux and hot loading
 Test 1
 
 Test 2
+
+Test 3
