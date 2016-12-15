@@ -225,7 +225,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
     * Now type "localhost:3000/" in the address bar
     * You should see "Hello World!" being logged in the console area
      
-1. Right now we have the bundling but hot reloading.  If you made changes to the index.js right now, you would have to rebundle your app again, restart your server and refresh your browser to see the changes.  We work on hotloading next!
+1. Right now we have the bundling but hot reloading.  If you made changes to the index.js right now, you would have to rebundle your app again, restart your server and refresh your browser to see the changes.  First we need to add React, then we'll work on hotloading!
      
 ### Resources
     
