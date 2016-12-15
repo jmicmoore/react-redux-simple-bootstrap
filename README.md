@@ -234,6 +234,84 @@ The bundled project is added via \<script\> tag to the template.  The server cre
 * [Using template engines with Express](http://expressjs.com/en/guide/using-template-engines.html)
     
     
+# Adding React and Babel Loader for transpiling React, ES6 and JSX syntax to Javascript (tag v1.0.5)
+
+1. From the command line, install React and React DOM into your DEV dependencies
+    ```
+    npm install react react-dom --save-dev
+    ```
+    
+1. Add the following to the index.js file in the src/client
+    ```javascript
+    import React from 'react';
+    import ReactDOM from 'react-dom';
+    
+    ReactDOM.render(
+        <h1>Hello, world!</h1>,
+        document.getElementById('content')
+    );
+    ```
+    
+1. From the command line, install Babel and the babel-loader
+    ```
+    npm install babel-loader babel-core --save-dev
+    ```
+1. Add the babel-loader to your Webpack configuration.
+    * Add the following to the webpack.config.js file:
+        ```javascript
+        module: {
+            loaders: [
+                {
+                    test: /\.js$/,
+                    exclude: /node_modules/,
+                    loader: 'babel-loader'
+                }
+            ]
+        }
+        ```
+1. Add the React and ES2015 presets for the Babel loader
+    * From the command line, install the react preset
+        ```
+        npm install babel-preset-react babel-preset-es2015 --save-dev
+        ```
+    * Add the query/presets section to the webpack.config.js file:
+        ```javascript
+        module: {
+            loaders: [
+                {
+                    test: /\.(js|jsx)$/,
+                    exclude: /node_modules/,
+                    loader: 'babel-loader',
+                    query: {
+                        presets: ['es2015', 'react']
+                    }
+                }
+            ]
+        }
+        ```
+    * The query configuration passes the 2 presets to the Babel loader
+    
+1. From the command line, create the bundle
+    ```npm run bundle```    
+    
+1. Test from the command line
+    * ```npm run local```
+    * Should see "Server listening on port 3000!" on the command line
+    
+1. Test that server can serve the bundled application
+    * Open Chrome browser
+    * Type "localhost:3000/" in the address bar
+    * You should see "Hello, World!" on the page
+    
+### Resources
+    
+* [Installing React](https://facebook.github.io/react/docs/installation.html)  
+* [Babel setup](https://babeljs.io/docs/setup/#installation)
+* [Configuring Webpack loaders](https://webpack.github.io/docs/using-loaders.html)
+* [React preset](http://babeljs.io/docs/plugins/preset-react/#basic-setup-with-the-cli-)
+* [ES2015 preset](http://babeljs.io/docs/plugins/preset-es2015/#basic-setup-with-the-cli-)
+
+ 
 ## Add a Jenkins deploy to AWS    
     
 **Troubleshooting**
