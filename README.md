@@ -1,13 +1,22 @@
 # react-redux-simple-bootstrap
-Minimal React bootstrap with Redux and hot loading
+Minimal React bootstrap with Redux and hot loading.
+This walkthrough is geared toward beginners.
 
-Follow tags to create from scratch
+Follow tags to create from scratch.
 
-**Prerequisites**
+## Prerequisites
 
 1. Install NodeJS and NPM
 
-**Tag "v1.0.1" - Hello World from the server-side**
+## Assumptions
+
+1. Using Chrome browser
+
+### Resources
+
+* [Install and work thru a few NodeJS Tutorials](https://github.com/workshopper/learnyounode)
+
+## Hello World from the server-side (tag v1.0.1)
 
 1. Clone from GIT repo
 
@@ -39,8 +48,15 @@ Follow tags to create from scratch
     * ```npm run local```
     * should see "Hello World!" again (with a few other log lines from npm)
 
+### Resources
 
-**Tag "v1.0.2" - Serving a static file with Express**
+* [NodeJS - console](https://nodejs.org/api/console.html#console_console)
+* [Using package.json with npm](https://docs.npmjs.com/getting-started/using-a-package.json)
+* [Package.json interactive guide](http://browsenpm.org/package.json)
+* [Running scripts with npm](https://docs.npmjs.com/cli/run-script)
+* [Great article on modules](https://medium.freecodecamp.com/javascript-modules-a-beginner-s-guide-783f7d7a5fcc#.81728hzhn)
+
+## Serving a static file with Express (tag v1.0.2)
 
 1. From the command line, install Express
     * ```npm install express --save```
@@ -97,10 +113,14 @@ Follow tags to create from scratch
         * ```npm run local```
         * Now refresh the header again, and you'll see the new message.
         
-1. Right now there is no bundling or hot reloading, so all changes require a restart of the server.  We'll fix that next.
+1. Right now there is no bundling or hot reloading, so all changes require a restart of the server.  We'll work on that next.
 
+### Resources
 
-**Tag "v1.0.3" - Using Webpack to Create a Modular JavaScript Project**
+* [Express example](http://expressjs.com/en/starter/hello-world.html)
+* [Serving static files](http://expressjs.com/en/starter/static-files.html)
+
+## Using Webpack to Create a Modular JavaScript Project (tag v1.0.3)
 
 1. From the command line, install Webpack and save to Dev dependencies
     * ```npm install webpack --save-dev```
@@ -108,10 +128,11 @@ Follow tags to create from scratch
     
 1. Create your bundle with Webpack manually
     * In the src/client folder, create a file called index.js and add the following:
-    ```javascript
-       console.log("Hello World from the Client!");
-    ```
-    * ```webpack ./src/client/index.js ./bin/bundle.js```
+        ```javascript
+           console.log("Hello World from the Client!");
+        ```
+    * The from the command line, run
+        ```webpack ./src/client/index.js ./bin/bundle.js```
     
 1. Test from the command line
     * ```node bin/bundle.js```
@@ -134,6 +155,86 @@ Follow tags to create from scratch
 1. Test from the command line
     * ```node bin/bundle.js```
     * You should see "Hello World from the Client!" on the command line.
+    
+
+### Resources
+
+* [Webpack intro](http://webpack.github.io/docs/usage.html)
+* [Great article on bundling](https://medium.freecodecamp.com/javascript-modules-part-2-module-bundling-5020383cf306#.451pdkj1h)
+
+## Adding an EJS Template to Contain the Bundled Project (tag v1.0.4)
+    
+The bundled project is added via \<script\> tag to the template.  The server created in server.js will then use Express to serve the template as a static file to the browser.    
+
+    
+1. From the command line, install EJS (you could also use Pug)
+    * ```npm install ejs --save```
+    
+1. Create an EJS template (could also use Pug)
+    * In the src/server folder, create a file called index.ejs and add the following:
+        ```html
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <title>My Bundled Application</title>
+        </head>
+        <body>
+            <div id="content"></div>
+            <script type="text/javascript" src="/bundle.js"></script>
+        </body>
+        </html>
+        ```
+    * Note the template is already pointing to the bundle.js file
+    
+1. Tell Express to use EJS as the template engine
+    * Add the following code to src/server/server.js
+        ```javascript
+        app.set('view engine', 'ejs');
+        ```
+    * By default Express looks for a "views" folder at the project root for where the template files are located.  Since our index.ejs file is not at the default folder location, we need to let Express know that.
+        ```javascript
+        app.set('views', 'src/server');
+        ```
+
+1. Tell Express to serve static files out of the bin directory from now on.
+    ```javascript
+    app.use(express.static('./bin'));
+    ```
+     
+1. Add a route to Express to render the template on any request
+    ```javascript
+    app.get('*', function(req, res) {
+        res.render('index');
+    });
+    ````
+
+1. Add the following script to your package.json.  This is just for convenience.
+    ```"bundle": "webpack",```
+    
+1. From the command line, create the bundle
+    ```npm run bundle```    
+    
+1. Test from the command line
+    * ```npm run local```
+    * Should see "Server listening on port 3000!" on the command line
+    
+1. Test that server can serve the bundled application
+    * Open Chrome browser
+    * Hit Option+Command+i (on Mac) or F12 (on PC) to open up the developer tools pane
+    * Click on the Console tab
+    * Now type "localhost:3000/" in the address bar
+    * You should see "Hello World!" being logged in the console area
+     
+1. Right now we have the bundling but hot reloading.  If you made changes to the index.js right now, you would have to rebundle your app again, restart your server and refresh your browser to see the changes.  We work on hotloading next!
+     
+### Resources
+    
+* [Including javascript](http://www.w3schools.com/tags/att_script_src.asp)    
+* [More on EJS](http://www.embeddedjs.com/)
+* [Using template engines with Express](http://expressjs.com/en/guide/using-template-engines.html)
+    
+    
+## Add a Jenkins deploy to AWS    
     
 **Troubleshooting**
 
