@@ -234,7 +234,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
 * [Using template engines with Express](http://expressjs.com/en/guide/using-template-engines.html)
     
     
-# Adding React and Babel Loader for transpiling React, ES6 and JSX syntax to Javascript (tag v1.0.5)
+## Adding React and Babel Loader for transpiling React, ES6 and JSX syntax to Javascript (tag v1.0.5)
 
 1. From the command line, install React and React DOM into your DEV dependencies
     ```
