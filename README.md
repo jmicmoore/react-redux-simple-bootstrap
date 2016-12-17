@@ -225,7 +225,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
     * Now type "localhost:3000/" in the address bar
     * You should see "Hello World!" being logged in the console area
      
-1. Right now we have the bundling but hot reloading.  If you made changes to the index.js right now, you would have to rebundle your app again, restart your server and refresh your browser to see the changes.  First we need to add React, then we'll work on hotloading!
+1. Right now we have the bundling but NOT hot reloading.  If you made changes to the index.js right now, you would have to rebundle your app again, restart your server and refresh your browser to see the changes.  First we need to add React, then forms, then we'll work on hotloading!
      
 ### Resources
     
@@ -302,7 +302,9 @@ The bundled project is added via \<script\> tag to the template.  The server cre
     * Open Chrome browser
     * Type "localhost:3000/" in the address bar
     * You should see "Hello, World!" on the page
-    
+
+1. Remove the src/client/index.html file, you are no longer using it.
+
 ### Resources
     
 * [Installing React](https://facebook.github.io/react/docs/installation.html)  
@@ -311,6 +313,132 @@ The bundled project is added via \<script\> tag to the template.  The server cre
 * [React preset](http://babeljs.io/docs/plugins/preset-react/#basic-setup-with-the-cli-)
 * [ES2015 preset](http://babeljs.io/docs/plugins/preset-es2015/#basic-setup-with-the-cli-)
 
+
+## Adding and Debugging a React Form (tag v1.0.6)
+
+1. Creating your simple root App in React
+    * Add a file named App.js to src/client with the following:
+        ```javascript
+        import React from 'react';
+        
+        class App extends React.Component {
+            render(){
+                return (
+                    <h1>Hello World from App!</h1>
+                );
+            }
+        };
+     
+        export default App;
+        ```
+    * Update the index.js file
+        ```javascript
+        // add this line
+        import App from './App';
+  
+        // replace this line
+        <h1>Hello, world!</h1>,
+        // with this line (don't forget to include the comma!)
+        <App />,
+        ```
+    
+1. Test your changes
+    * From the command line
+        ```
+        npm run bundle
+        npm run local        
+        ```    
+    * Open Chrome to "localhost:3000/"
+        * You should see "Hello, World from App!" on the page
+
+1. Add a simple form to your App (to demonstrate debugging now and to demonstrate that hotloading keeps its state when refreshed!)
+    * Update the App.js file and replace the contents with the following:
+        ```javascript
+        import React from 'react';
+        
+        class App extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    firstName: '',
+                    lastName: ''
+                };
+        
+                this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
+                this.handleLastNameChange = this.handleLastNameChange.bind(this);
+            }
+        
+            handleFirstNameChange(event){
+                this.setState({firstName: event.target.value});
+            }
+        
+            handleLastNameChange(event){
+                this.setState({lastName: event.target.value});
+            }
+        
+            render(){
+                return (
+                    <form>
+                        <label>
+                            First Name:
+                            <input type="text" value={this.state.firstName} onChange={this.handleFirstNameChange} />
+                        </label>
+                        <label>
+                            Last Name:
+                            <input type="text" value={this.state.lastName} onChange={this.handleLastNameChange} />
+                        </label>
+                    </form>
+                );
+            }
+        };
+        
+        export default App;
+        ```
+1. Test your changes
+    * From the command line
+        ```
+        npm run bundle
+        npm run local        
+        ```    
+    * Open Chrome to "localhost:3000/"
+        * You should see fields for First Name and Last Name on the page
+
+1. Look at the bundled source code
+    * In Chrome browser, hit Option+Command+i (on Mac) or F12 (on PC) to open up the Developer Tools pane
+    * Click on the Source tab
+    * You should see a tree containing Top > localhost:3000 > bundle.js
+    * Click on the bundle.js, look at the code and search for 'handleFirstNameChange' (Command+F or Control+F)
+        * This is your class after transpiling and bundling
+        
+1. Ask Webpack to include source maps
+    * Edit webpack.config.js and add the following section:
+        ```javascript
+        devtool: "source-map",
+        ```
+    * Reload your changes
+        ```
+        npm run bundle
+        npm run local        
+        ```  
+1. Look at the actual source code
+    * From Developer Tools, click on the Source tab
+    * Now the Top element should have a new child "webpack://"
+    * Expand "webpack://", expand the "." folder, expand the "src/client" folder, and click on the App.js file
+        * You should see your original App.js class file.  Source maps helps the browser display your original class files
+
+1. Try debugging
+    * In the App.js file, click the line number next to the handleFirstNameChange function (should see a blue bookmark)
+    * Place your cursor inside the First Name input and type a character
+        * Chrome should stop at your breakpoint.  You can hover over the event.target.value to see the character you typed.
+        * Check out resources for more info
+
+### Resources
+
+[React - Components and Props](https://facebook.github.io/react/docs/components-and-props.html)
+[React - Forms](https://facebook.github.io/react/docs/forms.html)
+[Webpack Devtool](https://webpack.js.org/configuration/devtool/)
+[Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/)
+[React Chrome Developer Tools](https://facebook.github.io/react/blog/2014/01/02/react-chrome-developer-tools.html)
  
 ## Add a Jenkins deploy to AWS    
     

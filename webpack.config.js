@@ -3,6 +3,7 @@
  */
 
 module.exports = {
+    devtool: "source-map",
     entry: './src/client/index.js',
     output: {
         path: './bin',
