@@ -4,6 +4,25 @@
 var express = require('express');
 var app = express();
 
+
+var webpack = require('webpack');
+var webpackConfig = require('../../webpack.config');
+var compiler = webpack(webpackConfig);
+
+const webpackDevMiddleware = require('webpack-dev-middleware');
+app.use(webpackDevMiddleware(compiler, {
+    noInfo: true,
+    publicPath: '/',
+    stats: {
+        colors: true
+    },
+    historyApiFallback: true
+}));
+
+const webpackHotMiddleware = require('webpack-hot-middleware');
+app.use(webpackHotMiddleware(compiler));
+
+
 app.use(express.static('./bin'));
 
 app.set('view engine', 'ejs');

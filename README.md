@@ -1,8 +1,14 @@
 # react-redux-simple-bootstrap
 Minimal React bootstrap with Redux and hot loading.
-This walkthrough is geared toward beginners.
+This walkthrough starts completely from scratch and is geared toward beginners.  Each release incrementally builds on the previous.
+Each section has resources for further reading/research.
 
-Follow tags to create from scratch.
+## Scope
+This walkthrough does NOT teach you React, Redux or any of the other technologies.  It is simply a bootstrapping walkthrough.  If you want to understand deeper, read the articles in Reouces.
+
+## Acknowlegments
+
+* I'm an old dog who is learning new tricks.  I've only been in the web space 2 for years now (been writing Swing apps and servers most of the my life.)  I've only been in the React space for less than a year, and until recently felt like the entire bootstrapping of bundled apps was udder magic.  I started this project to better understand the separate steps involved in bootstrapping a modern bundled app that uses react-redux.  It was built by standing on the shoulders of others.  Ie. by learning from more experienced devs on my team (Dnyanesh, Mike, and Roy) and doing a little research on my own.
 
 ## Prerequisites
 
@@ -430,18 +436,164 @@ The bundled project is added via \<script\> tag to the template.  The server cre
     * In the App.js file, click the line number next to the handleFirstNameChange function (should see a blue bookmark)
     * Place your cursor inside the First Name input and type a character
         * Chrome should stop at your breakpoint.  You can hover over the event.target.value to see the character you typed.
+        * Click the bookmark to toggle it on/off.  Turn it off for now.
         * Check out resources for more info
 
 ### Resources
 
-[React - Components and Props](https://facebook.github.io/react/docs/components-and-props.html)
-[React - Forms](https://facebook.github.io/react/docs/forms.html)
-[Webpack Devtool](https://webpack.js.org/configuration/devtool/)
-[Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/)
-[React Chrome Developer Tools](https://facebook.github.io/react/blog/2014/01/02/react-chrome-developer-tools.html)
+* [React - Components and Props](https://facebook.github.io/react/docs/components-and-props.html)
+* [React - Forms](https://facebook.github.io/react/docs/forms.html)
+* [Webpack Devtool](https://webpack.js.org/configuration/devtool/)
+* [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/)
+* [React Chrome Developer Tools](https://facebook.github.io/react/blog/2014/01/02/react-chrome-developer-tools.html)
  
-## Add a Jenkins deploy to AWS    
+
+## Adding Hotloading (tag v1.0.7)
+
+WARNING!  This topic gets rather involved and may require alot of coffee and reading if you really want to understand it, but delivers awesome results!
+
+1. Install Webpack Hot Middleware and Webpack Dev Middleware
+    * From command line
+        ```
+        npm install webpack-hot-middleware webpack-dev-middleware --save-dev
+        ```
+    * Edit webpack.config.js file
+        * Add the following imports:
+            ```javascript
+            const path = require('path');
+            const webpack = require('webpack');
+            ```
+        * Add the following plugin to the plugins array:
+            ```javascript
+            plugins: [
+               new webpack.HotModuleReplacementPlugin(),
+            ]
+            ```
+        * Add 'webpack-hot-middleware/client' into the entry array before index.js.
+            ```javascript
+            entry: [
+                'webpack-hot-middleware/client',
+                './src/client/index.js'
+            ],
+            ```
+        * webpack-dev-middleware requires output.path to be an absolute path or '/', so we tweak the output section, replace:
+            ```javascript
+            path: './bin',
+            ```
+        * with
+            ```javascript
+            path: path.resolve(__dirname, 'dist'),
+            ```
+    * Edit server.js file
+        * Add webpack-dev-middleware the usual way, then add webpack-hot-middleware to the Express server
+            ```javascript
+            var webpack = require('webpack');
+            var webpackConfig = require('../../webpack.config');
+            var compiler = webpack(webpackConfig);
+            
+            const webpackDevMiddleware = require('webpack-dev-middleware');           
+            app.use(webpackDevMiddleware(compiler, {
+                noInfo: true,
+                publicPath: '/',
+                stats: {
+                  colors: true
+                },
+                historyApiFallback: true
+            }));
+  
+            const webpackHotMiddleware = require('webpack-hot-middleware');
+            app.use(webpackHotMiddleware(compiler));
+            ```
+        
+1. Install React Hot Loader (NOTE: we don't want the latest release, we want the 3.0 beta 2 version, so we must be explicit!)
+    * Add the following to devDependencies section of package.json: 
+        ```javascript
+        "react-hot-loader": "^3.0.0-beta.2",
+        ```
+    * From the command line
+        ```
+        npm install
+        ```
+    * Edit webpack.config.js file and add one more entry ('react-hot-loader/patch') as the FIRST item in the entry array
+        ```javascript
+        entry: [
+            'react-hot-loader/patch',
+            'webpack-hot-middleware/client',
+            './src/client/index.js'
+        ],
+        ```
+    * Edit the index.js file
+        * Add the import for AppContainer
+            ```javascript
+            import { AppContainer } from 'react-hot-loader';
+            ```
+        * Replace this
+            ```javascript
+            ReactDOM.render(
+                <App/>,
+                document.getElementById('content')
+            );
+            ```
+        * With this
+            ```javascript
+            renderWithHotReload(App);
+            
+            module.hot.accept('./App', () => {
+                const NextApp = require('./App').default;
+                renderWithHotReload(NextApp);
+            });
+            
+            function renderWithHotReload(Component) {
+                ReactDOM.render(
+                    <AppContainer>
+                        <Component/>
+                    </AppContainer>,
+                    document.getElementById('content')
+                );
+            };
+            ```
+ 
+1. Test Hotloading on the Browser
+    * Reload your changes
+        ```
+        npm run bundle
+        npm run local        
+        ```
+    * You should see
+        * Server listening on port 3000!
+        *  webpack built [some hex number] in [xxx] ms
+    * Open Chrome to "localhost:3000/"
+        * You should see fields for First Name and Last Name on the page
+    * Type your first and last names into the fields
+    * NOW go into App.js and replace the following:
+        ```javascript
+        First Name:
+        ```
+    * with
+        ```javascript
+        My First Name:
+        ```
+    * Go back to the brower AND DO NOT REFRESH
+        * You should see the first name label change to "My First Name:" (sometimes this can take up to 5 seconds to refresh)
+        * However the values of the names are get wiped out!  Turns out the ability to save the DOM state requires Redux, which we add shortly!
     
+## Resources Used for Code Snippets / Configuration
+
+* [Webpack Hot Middleware](https://github.com/glenjamin/webpack-hot-middleware) (NOTE: not all plugins from instructions were used)
+* [React Hot Boilerplate (most recent commit from 3.0 beta demo)](https://github.com/gaearon/react-hot-boilerplate/tree/9609a8e567b940ff341176638fb1169f70efd461)
+
+## Other Related Resources
+
+* [Hot Reloading in React - Article by Dan Abramov](https://medium.com/@dan_abramov/hot-reloading-in-react-1140438583bf#.di3l5wnr4)
+* [Dan Abramov's talk on Hot Reloading with Time Travel](https://www.youtube.com/watch?v=xsSnOQynTHs)
+* [React Hot Loader on GitHub](https://github.com/gaearon/react-hot-loader)
+* [React Hot Loader v3.0 on GitHub](https://github.com/gaearon/react-hot-loader/tree/d360e3a24914db0c123ca03192bfdade48453751)
+* [React Hot Boilerplate on GitHub](https://github.com/gaearon/react-hot-boilerplate)
+* [Webpack Hot Module Replacement (HMR)](https://webpack.github.io/docs/hot-module-replacement.html)
+* [Webpack Dev Server](https://webpack.github.io/docs/webpack-dev-server.html)
+* [Webpack Dev Middleware](https://webpack.github.io/docs/webpack-dev-middleware.html)
+    
+
 **Troubleshooting**
 
 1. If you are using a non-standard SSH key (ie. something other than id_rsa) and are having trouble with pushing from IDEA, make sure IntelliJ is using the Native SSH agent.
