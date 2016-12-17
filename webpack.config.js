@@ -1,14 +1,23 @@
 /**
  * Created by jmoor6 on 12/13/16.
  */
+const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
     devtool: "source-map",
-    entry: './src/client/index.js',
+    entry: [
+        'react-hot-loader/patch',
+        'webpack-hot-middleware/client',
+        './src/client/index.js'
+    ],
     output: {
-        path: './bin',
+        path: path.resolve(__dirname, 'bin'),
         filename: 'bundle.js'
     },
+    plugins: [
+        new webpack.HotModuleReplacementPlugin(),
+    ],
     module: {
         loaders: [
             {
