@@ -575,7 +575,7 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
         ```
     * Go back to the brower AND DO NOT REFRESH
         * You should see the first name label change to "My First Name:" (sometimes this can take up to 5 seconds to refresh)
-        * However the values of the names are get wiped out!  Turns out the ability to save the DOM state requires Redux, which we add shortly!
+        * However the values of the names are get wiped out!  Turns out the ability to do hotloading while saving the DOM state is rather tricky.  I've read several articles on how to do it, but never really go anything to work.  If you figure it out, please feel free to submit a PR!
     
 ## Resources Used for Code Snippets / Configuration
 
