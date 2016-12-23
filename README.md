@@ -638,12 +638,7 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
     * Create a new folder called "reducers" under client
     * In that new folder, create a new file called userReducer.js and add the following code:
         ```javascript
-        const initialState = {
-            firstName: 'Unknown',
-            lastName: ''
-        };
-        
-        export const userReducer = ( state = initialState, action) => {
+        export const userReducer = ( state = {}, action) => {
             let newState = {...state};
         
             if(action.type === 'user/SET_FIRST_NAME') {
