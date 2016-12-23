@@ -6,6 +6,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { AppContainer } from 'react-hot-loader';
+import { Provider } from 'react-redux';
+import store from './store';
 
 renderWithHotReload(App);
 
@@ -17,7 +19,9 @@ module.hot.accept('./App', () => {
 function renderWithHotReload(Component) {
     ReactDOM.render(
         <AppContainer>
-            <Component/>
+            <Provider store={store}>
+                <Component/>
+            </Provider>
         </AppContainer>,
         document.getElementById('content')
     );

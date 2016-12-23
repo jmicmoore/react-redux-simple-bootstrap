@@ -4,7 +4,7 @@ This walkthrough starts completely from scratch and is geared toward beginners. 
 Each section has resources for further reading/research.
 
 ## Scope
-This walkthrough does NOT teach you React, Redux or any of the other technologies.  It is simply a bootstrapping walkthrough.  If you want to understand deeper, read the articles in Reouces.
+This walkthrough does NOT teach you React, Redux or any of the other technologies.  It is simply a bootstrapping walkthrough.  If you want to understand deeper, read the articles in Resources.
 
 ## Acknowlegments
 
@@ -561,7 +561,7 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
         ```
     * You should see
         * Server listening on port 3000!
-        *  webpack built [some hex number] in [xxx] ms
+        * webpack built [some hex number] in [xxx] ms
     * Open Chrome to "localhost:3000/"
         * You should see fields for First Name and Last Name on the page
     * Type your first and last names into the fields
@@ -593,6 +593,179 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
 * [Webpack Dev Server](https://webpack.github.io/docs/webpack-dev-server.html)
 * [Webpack Dev Middleware](https://webpack.github.io/docs/webpack-dev-middleware.html)
     
+
+## Adding React-Redux (tag v1.0.8)
+
+If some of the structure we create here feels a bit opinionated, don't worry.  You can structure this however you want.  I'm only doing this to try to make the concepts clearer. 
+
+1. Install Redux, React-Redux, Babel "Stage 0" Preset ("stage-0" gives you spread object syntax and a few other things)
+    * From the command line:
+        ```
+        npm install redux react-redux babel-preset-stage-0 --save-dev
+        ```
+
+1. Configure Babel to use stage-0 (via Webpack)
+    * Edit the webpack.config.js file to add "stage-0" to the presets
+        ```javascript
+        query: {
+            presets: ['es2015', 'react', 'stage-0']
+        }
+        ```
+
+1. Create the Redux store
+    * Create a new file called store.js under the client folder and add the following code:
+        ```javascript
+        import { createStore } from 'redux';
+        const store = createStore();
+        export default store;
+        ```
+1. Connect the Redux store to the app
+    * Edit the index.js file:
+        * Add the following imports:
+            ```javascript
+            import { Provider } from 'react-redux';
+            import store from './store';
+            ```
+        * Wrap the root component with the Redux store Provider
+            ```javascript
+            <AppContainer>
+                <Provider store={store}>
+                    <Component/>
+                </Provider>
+            </AppContainer>,
+            ```
+1. Create a User Reducer to handle mutable state for the first and last names
+    * Create a new folder called "reducers" under client
+    * In that new folder, create a new file called userReducer.js and add the following code:
+        ```javascript
+        const initialState = {
+            firstName: 'Unknown',
+            lastName: ''
+        };
+        
+        export const userReducer = ( state = initialState, action) => {
+            let newState = {...state};
+        
+            if(action.type === 'user/SET_FIRST_NAME') {
+                newState.firstName = action.payload.firstName;
+            }
+        
+            if(action.type === 'user/SET_LAST_NAME') {
+                newState.firstName = action.payload.firstName;
+            }
+        
+            return newState;
+        };
+        ```
+    * Edit the store.js file to add the reducer to the Redux store.  The "combineReducers" middleware combines your separate reducers before creating the Redux store.  Replace the previous code with the following:
+        ```javascript
+        import { createStore, combineReducers } from 'redux';
+        import { userReducer } from './reducers/userReducer';
+        
+        const reducers = {
+            user: userReducer,
+        };
+        
+        const store = createStore(combineReducers(reducers));
+        
+        export default store;
+        ```
+1. Create actions to update the store
+    * Create a new folder, called "actions" under client
+    * In that new folder, create a new file called userActions.js and add the following code:
+        ```javascript
+        import store from '../store';
+        
+        export const setFirstName = (firstName) => {
+            store.dispatch({
+                type: 'user/SET_FIRST_NAME',
+                payload: firstName
+            });
+        };
+        
+        export const setLastName = (lastName) => {
+            store.dispatch({
+                type: 'user/SET_LAST_NAME',
+                payload: lastName
+            });
+        };
+        ```
+        * Make sure the types match those of the userReducer!!!
+        
+1. Update the React App.js component to read from Redux state instead the component's local state:
+    * Delete the constructor() function
+    * Add a function called mapStateToProps with the following:
+        ```javascript
+        const mapStateToProps = (state) => {
+            // makes redux state available to components via this.props.xxx
+            return {
+                  firstName: state.user.firstName,
+                  lastName: state.user.lastName
+            };
+        };
+        ```
+    * Update render() function to use properties supplied by Redux instead of component's state
+        * Replace
+            ```javascript
+            this.state.firstName
+            this.state.lastName
+            ```
+        * With
+            ```javascript
+            this.props.firstName
+            this.props.lastName
+            ```
+            
+1. Update the React App.js component to store changes into Redux state instead of component's local state:
+    * Add the import for user actions
+        ```javascript
+        import * as userActions from './actions/userActions';
+        ```
+        
+    * Add a function called mapDispatchToProps with the following:
+        ```javascript
+        const mapDispatchToProps = () => {
+            // makes actions available to components vis this.props.xxx
+            return {
+                  setFirstName : userActions.setFirstName,
+                  setLastName : userActions.setLastName,
+            };
+        };
+        ```
+    * Change your handlers to store changes using Redux actions:
+        ```javascript
+        handleFirstNameChange(event){
+            this.props.setFirstName(event.target.value);
+        }
+    
+        handleLastNameChange(event){
+            this.props.setLastName(event.target.value);
+        }
+        ```
+
+1. Update the React App.js component to connect with the Redux store.  This allows the component to receive notifications (via mapStateToProps being called) when the Redux state changes.
+    * Add the import for the Redux connect function
+        ```javascript
+        import {connect} from 'react-redux';
+        ```
+    * Connect the App component to the Redux store, replace this:
+        ```javascript
+        export default App;
+        ```
+    * With this:
+        ```javascript
+        export default connect(mapStateToProps, mapDispatchToProps)(App);
+        ```
+
+## Resources
+
+* [Redux - Usage with React](http://redux.js.org/docs/basics/UsageWithReact.html)
+* [Redux - Structuring Reducers](http://redux.js.org/docs/recipes/StructuringReducers.html)
+* [Redux on GitHub](https://github.com/reactjs/redux)
+* [React Redux on GitHub](https://github.com/reactjs/react-redux)
+* [Redux Webpack ES6 Boilerplate on GitHub](https://github.com/nicksp/redux-webpack-es6-boilerplate)
+* [Babel Preset Stage 0](https://babeljs.io/docs/plugins/preset-stage-0/)
+  
 
 **Troubleshooting**
 
