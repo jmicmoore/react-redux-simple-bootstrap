@@ -752,6 +752,19 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
         export default connect(mapStateToProps, mapDispatchToProps)(App);
         ```
 
+1. Test in the Browser
+    * If your app is still running in the terminal, you should be able to just switch to your browser and confirm that your app still works.
+    * However, sometimes if you have to install new libs or if you make major structual changes to you code, you may have to reload your changes
+        ```
+        npm run bundle
+        npm run local        
+        ```
+    * You should see
+        * Server listening on port 3000!
+        * webpack built [some hex number] in [xxx] ms
+    * Open Chrome to "localhost:3000/"
+        * You should see the latest fields for First Name and Last Name on the page
+
 ## Resources
 
 * [Redux - Usage with React](http://redux.js.org/docs/basics/UsageWithReact.html)
