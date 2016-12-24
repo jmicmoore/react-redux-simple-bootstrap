@@ -4,15 +4,15 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import Routes from './routes';
 import { AppContainer } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import store from './store';
 
-renderWithHotReload(App);
+renderWithHotReload(Routes);
 
-module.hot.accept('./App', () => {
-    const NextApp = require('./App').default;
+module.hot.accept('./routes', () => {
+    const NextApp = require('./routes').default;
     renderWithHotReload(NextApp);
 });
 

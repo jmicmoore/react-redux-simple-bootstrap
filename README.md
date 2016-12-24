@@ -1,14 +1,17 @@
 # react-redux-simple-bootstrap
 Minimal React bootstrap with Redux and hot loading.
-This walkthrough starts completely from scratch and is geared toward beginners.  Each release incrementally builds on the previous.
-Each section has resources for further reading/research.
+This walkthrough starts completely from scratch and is geared toward beginners.  Each release incrementally builds on the previous.  Each section has resources for further reading/research.
+PLEASE NOTE:  There will be all sorts of things you wouldn't do in production code (like hardcoding paths, etc), especially in the early releases of this.
 
 ## Scope
 This walkthrough does NOT teach you React, Redux or any of the other technologies.  It is simply a bootstrapping walkthrough.  If you want to understand deeper, read the articles in Resources.
 
 ## Acknowlegments
 
-* I'm an old dog who is learning new tricks.  I've only been in the web space 2 for years now (been writing Swing apps and servers most of the my life.)  I've only been in the React space for less than a year, and until recently felt like the entire bootstrapping of bundled apps was udder magic.  I started this project to better understand the separate steps involved in bootstrapping a modern bundled app that uses react-redux.  It was built by standing on the shoulders of others.  Ie. by learning from more experienced devs on my team (Dnyanesh, Mike, and Roy) and doing a little research on my own.
+* I'm an old dog who is learning new tricks.  I've only been in the web space 2 for years now (been writing Swing apps and servers most of the my life.)
+I've only been in the React space for less than a year, and until recently felt like the entire bootstrapping of bundled apps was udder magic.
+I started this project to better understand the separate steps involved in bootstrapping a modern bundled app that uses react-redux.
+It was built by standing on the shoulders of others.  Ie. by learning from more experienced devs on my team (Dnyanesh Sonavane, Michael Cook, and Roy Higgins) and doing a little research on my own.
 
 ## Prerequisites
 
@@ -773,7 +776,157 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
 * [React Redux on GitHub](https://github.com/reactjs/react-redux)
 * [Redux Webpack ES6 Boilerplate on GitHub](https://github.com/nicksp/redux-webpack-es6-boilerplate)
 * [Babel Preset Stage 0](https://babeljs.io/docs/plugins/preset-stage-0/)
-  
+
+## Adding React Routing (tag v1.0.9)
+
+1. Install React-Router
+    * From the command line,
+       ```
+       npm install react-router --save-dev
+       ```
+1. From the src/client folder, add a new file called "routes.js" and add the following:
+    ```javascript
+    import React from 'react';
+    import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+    import App from './App';
+    
+    const Routes = () => {
+        return (
+            <Router history={browserHistory}>
+                <Route path="/" component={App}>
+                </Route>
+            </Router>
+        );
+    };
+    
+    export default Routes;
+    ```
+1. Adapt the rendering code to use React Router as the root component instead of App.  Make the following changes to the index.js file:
+    * Replace
+        ```javascript
+        import App from './App';
+        ```
+    * with
+        ```javascript
+        import Routes from './routes';
+        ```
+    * Replace
+        ```javascript
+        renderWithHotReload(App);
+        
+        module.hot.accept('./App', () => {
+            const NextApp = require('./App').default;
+            renderWithHotReload(NextApp);
+        });
+        ```
+    * with
+        ```javascript
+        renderWithHotReload(Routes);
+        
+        module.hot.accept('./routes', () => {
+            const NextApp = require('./routes').default;
+            renderWithHotReload(NextApp);
+        });
+        ```
+1. Test in the Browser
+    * If your app is still running in the terminal, you should be able to just switch to your browser and confirm that your app still works.
+    * However, sometimes if you have to install new libs or if you make major structual changes to you code, you may have to reload your changes
+        ```
+        npm run bundle
+        npm run local        
+        ```
+    * You should see
+        * Server listening on port 3000!
+        * webpack built [some hex number] in [xxx] ms
+    * Open Chrome to "localhost:3000"
+        * You should see the latest fields for First Name and Last Name on the page       
+        * To demonstrate the routing, lets refactor the components a bit and add a few more routes.
+         
+1. Create a User Profile component
+    * From the src/client folder, create a folder called "components"
+    * Copy the App.js file into the src/client components folder
+    * Rename the copy to "userProfile.js"
+    * Edit UserProfile.js and rename App to UserProfile (should be 2 places)
+    * Go back to the original App.js file and replace its contents with below:
+        ```javascript
+        import React from 'react';
+        import {connect} from 'react-redux';
+        
+        class App extends React.Component {
+        
+            render() {
+                return (
+                    <div>
+                        {this.props.children}
+                    </div>
+                );
+            }
+        }
+        
+        export default connect()(App);
+        ```
+1. Create a Home component
+    * From src/client/components folder, create a file called "Home.js" and add the following:
+        ```javascript
+        import React from 'react';
+        import {connect} from 'react-redux';
+        
+        class Home extends React.Component {
+        
+            render() {
+                return (
+                    <div>
+                        Hello! You are home.
+                    </div>
+                );
+            }
+        }
+        
+        export default connect()(Home);
+        ```
+1. Add the new pages to React Router
+    * Add Home.js as the default route
+        * Add an import for Home.js
+        * Inside the Route for path="/", add an Index Route that points to the Home component
+    * Add UserProfile.js as a new route mapped to "profile"
+        * Add an import for UserProfile.js
+        * Inside the Route for path="/", add a new Route for path="profile" that points to UserProfile
+    * Once this is done, your code for routes should look like the following:     
+        ```javascript
+        import React from 'react';
+        import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+        import App from './App';
+        import Home from './components/Home';
+        import UserProfile from './components/UserProfile';
+        
+        const Routes = () => {
+            return (
+                <Router history={browserHistory}>
+                    <Route path="/" component={App}>
+                        <IndexRoute component={Home}/>
+                        <Route path="profile" component={UserProfile}/>
+                    </Route>
+                </Router>
+            );
+        };
+        
+        export default Routes;
+        ```
+1. Test in the Browser
+    * (We are skipping the bundling and running steps from this point on.)
+    * Open Chrome to "localhost:3000"
+        * You should see "Hello! You are home.
+    * Enter "localhost:3000/profile" in the browser's URL
+        * You should see the form for First Name and Last Name
+
+### Resources
+
+* [React-Router docs](https://github.com/ReactTraining/react-router/tree/master/docs)
+
+## Separating Local from Production Code (tag v1.0.10)
+
+
+## Add a Jenkins deploy to AWS    
 
 **Troubleshooting**
 
