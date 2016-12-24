@@ -923,10 +923,6 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
 
 * [React-Router docs](https://github.com/ReactTraining/react-router/tree/master/docs)
 
-## Separating Local from Production Code (tag v1.0.10)
-
-
-## Add a Jenkins deploy to AWS    
 
 **Troubleshooting**
 
