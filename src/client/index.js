@@ -5,24 +5,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Routes from './routes';
-import { AppContainer } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import store from './store';
 
-renderWithHotReload(Routes);
+renderApp(Routes);
 
-module.hot.accept('./routes', () => {
-    const NextApp = require('./routes').default;
-    renderWithHotReload(NextApp);
-});
-
-function renderWithHotReload(Component) {
+function renderApp(Component) {
     ReactDOM.render(
-        <AppContainer>
-            <Provider store={store}>
-                <Component/>
-            </Provider>
-        </AppContainer>,
+        <Provider store={store}>
+            <Component/>
+        </Provider>,
         document.getElementById('content')
     );
 };
