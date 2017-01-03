@@ -1,8 +1,17 @@
 # react-redux-simple-bootstrap
 Minimal React bootstrap with Redux and hot loading.
-This walkthrough is geared toward beginners.
+This walkthrough starts completely from scratch and is geared toward beginners.  Each release incrementally builds on the previous.  Each section has resources for further reading/research.
+PLEASE NOTE:  There will be all sorts of things you wouldn't do in production code (like hardcoding paths, etc), especially in the early releases of this.
 
-Follow tags to create from scratch.
+## Scope
+This walkthrough does NOT teach you React, Redux or any of the other technologies.  It is simply a bootstrapping walkthrough.  If you want to understand deeper, read the articles in Resources.
+
+## Acknowlegments
+
+* I'm an old dog who is learning new tricks.  I've only been in the web space 2 for years now (been writing Swing apps and servers most of the my life.)
+I've only been in the React space for less than a year, and until recently felt like the entire bootstrapping of bundled apps was udder magic.
+I started this project to better understand the separate steps involved in bootstrapping a modern bundled app that uses react-redux.
+It was built by standing on the shoulders of others.  Ie. by learning from more experienced devs on my team (Dnyanesh Sonavane, Michael Cook, and Roy Higgins) and doing a little research on my own.
 
 ## Prerequisites
 
@@ -225,7 +234,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
     * Now type "localhost:3000/" in the address bar
     * You should see "Hello World!" being logged in the console area
      
-1. Right now we have the bundling but hot reloading.  If you made changes to the index.js right now, you would have to rebundle your app again, restart your server and refresh your browser to see the changes.  We work on hotloading next!
+1. Right now we have the bundling but NOT hot reloading.  If you made changes to the index.js right now, you would have to rebundle your app again, restart your server and refresh your browser to see the changes.  First we need to add React, then forms, then we'll work on hotloading!
      
 ### Resources
     
@@ -233,9 +242,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
 * [More on EJS](http://www.embeddedjs.com/)
 * [Using template engines with Express](http://expressjs.com/en/guide/using-template-engines.html)
     
-    
-## Add a Jenkins deploy to AWS    
-    
+
 **Troubleshooting**
 
 1. If you are using a non-standard SSH key (ie. something other than id_rsa) and are having trouble with pushing from IDEA, make sure IntelliJ is using the Native SSH agent.
