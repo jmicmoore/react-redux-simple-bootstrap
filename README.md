@@ -1,8 +1,17 @@
 # react-redux-simple-bootstrap
 Minimal React bootstrap with Redux and hot loading.
-This walkthrough is geared toward beginners.
+This walkthrough starts completely from scratch and is geared toward beginners.  Each release incrementally builds on the previous.  Each section has resources for further reading/research.
+PLEASE NOTE:  There will be all sorts of things you wouldn't do in production code (like hardcoding paths, etc), especially in the early releases of this.
 
-Follow tags to create from scratch.
+## Scope
+This walkthrough does NOT teach you React, Redux or any of the other technologies.  It is simply a bootstrapping walkthrough.  If you want to understand deeper, read the articles in Resources.
+
+## Acknowlegments
+
+* I'm an old dog who is learning new tricks.  I've only been in the web space 2 for years now (been writing Swing apps and servers most of the my life.)
+I've only been in the React space for less than a year, and until recently felt like the entire bootstrapping of bundled apps was udder magic.
+I started this project to better understand the separate steps involved in bootstrapping a modern bundled app that uses react-redux.
+It was built by standing on the shoulders of others.  Ie. by learning from more experienced devs on my team (Dnyanesh Sonavane, Michael Cook, and Roy Higgins) and doing a little research on my own.
 
 ## Prerequisites
 
@@ -430,18 +439,18 @@ The bundled project is added via \<script\> tag to the template.  The server cre
     * In the App.js file, click the line number next to the handleFirstNameChange function (should see a blue bookmark)
     * Place your cursor inside the First Name input and type a character
         * Chrome should stop at your breakpoint.  You can hover over the event.target.value to see the character you typed.
+        * Click the bookmark to toggle it on/off.  Turn it off for now.
         * Check out resources for more info
 
 ### Resources
 
-[React - Components and Props](https://facebook.github.io/react/docs/components-and-props.html)
-[React - Forms](https://facebook.github.io/react/docs/forms.html)
-[Webpack Devtool](https://webpack.js.org/configuration/devtool/)
-[Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/)
-[React Chrome Developer Tools](https://facebook.github.io/react/blog/2014/01/02/react-chrome-developer-tools.html)
+* [React - Components and Props](https://facebook.github.io/react/docs/components-and-props.html)
+* [React - Forms](https://facebook.github.io/react/docs/forms.html)
+* [Webpack Devtool](https://webpack.js.org/configuration/devtool/)
+* [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/)
+* [React Chrome Developer Tools](https://facebook.github.io/react/blog/2014/01/02/react-chrome-developer-tools.html)
  
-## Add a Jenkins deploy to AWS    
-    
+
 **Troubleshooting**
 
 1. If you are using a non-standard SSH key (ie. something other than id_rsa) and are having trouble with pushing from IDEA, make sure IntelliJ is using the Native SSH agent.
