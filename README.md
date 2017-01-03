@@ -1,14 +1,17 @@
 # react-redux-simple-bootstrap
 Minimal React bootstrap with Redux and hot loading.
-This walkthrough starts completely from scratch and is geared toward beginners.  Each release incrementally builds on the previous.
-Each section has resources for further reading/research.
+This walkthrough starts completely from scratch and is geared toward beginners.  Each release incrementally builds on the previous.  Each section has resources for further reading/research.
+PLEASE NOTE:  There will be all sorts of things you wouldn't do in production code (like hardcoding paths, etc), especially in the early releases of this.
 
 ## Scope
 This walkthrough does NOT teach you React, Redux or any of the other technologies.  It is simply a bootstrapping walkthrough.  If you want to understand deeper, read the articles in Resources.
 
 ## Acknowlegments
 
-* I'm an old dog who is learning new tricks.  I've only been in the web space 2 for years now (been writing Swing apps and servers most of the my life.)  I've only been in the React space for less than a year, and until recently felt like the entire bootstrapping of bundled apps was udder magic.  I started this project to better understand the separate steps involved in bootstrapping a modern bundled app that uses react-redux.  It was built by standing on the shoulders of others.  Ie. by learning from more experienced devs on my team (Dnyanesh, Mike, and Roy) and doing a little research on my own.
+* I'm an old dog who is learning new tricks.  I've only been in the web space 2 for years now (been writing Swing apps and servers most of the my life.)
+I've only been in the React space for less than a year, and until recently felt like the entire bootstrapping of bundled apps was udder magic.
+I started this project to better understand the separate steps involved in bootstrapping a modern bundled app that uses react-redux.
+It was built by standing on the shoulders of others.  Ie. by learning from more experienced devs on my team (Dnyanesh Sonavane, Michael Cook, and Roy Higgins) and doing a little research on my own.
 
 ## Prerequisites
 
@@ -553,7 +556,7 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
             };
             ```
  
-1. Test Hotloading on the Browser
+1. Test Hotloading on the Browser.
     * Reload your changes
         ```
         npm run bundle
@@ -773,7 +776,7 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
 * [React Redux on GitHub](https://github.com/reactjs/react-redux)
 * [Redux Webpack ES6 Boilerplate on GitHub](https://github.com/nicksp/redux-webpack-es6-boilerplate)
 * [Babel Preset Stage 0](https://babeljs.io/docs/plugins/preset-stage-0/)
-  
+
 
 **Troubleshooting**
 
