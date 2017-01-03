@@ -8,7 +8,7 @@ This walkthrough does NOT teach you React, Redux or any of the other technologie
 
 ## Acknowlegments
 
-* I'm an old dog who is learning new tricks.  I've only been in the web space 2 for years now (been writing Swing apps and servers most of the my life.)
+I'm an old dog who is learning new tricks.  I've only been in the web space 2 for years now (been writing Swing apps and servers most of the my life.)
 I've only been in the React space for less than a year, and until recently felt like the entire bootstrapping of bundled apps was udder magic.
 I started this project to better understand the separate steps involved in bootstrapping a modern bundled app that uses react-redux.
 It was built by standing on the shoulders of others.  Ie. by learning from more experienced devs on my team (Dnyanesh Sonavane, Michael Cook, and Roy Higgins) and doing a little research on my own.
