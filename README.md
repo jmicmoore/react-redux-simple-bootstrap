@@ -556,7 +556,7 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
             };
             ```
  
-1. Test Hotloading on the Browser
+1. Test Hotloading on the Browser.
     * Reload your changes
         ```
         npm run bundle
