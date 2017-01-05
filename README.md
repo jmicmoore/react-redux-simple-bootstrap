@@ -25,7 +25,7 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 
 * [Install and work thru a few NodeJS Tutorials](https://github.com/workshopper/learnyounode)
 
-## Hello World from the server-side (tag v1.0.1)
+## Hello World from the server-side (tag v0.0.1)
 
 1. Clone from GIT repo
 
@@ -65,7 +65,7 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 * [Running scripts with npm](https://docs.npmjs.com/cli/run-script)
 * [Great article on modules](https://medium.freecodecamp.com/javascript-modules-a-beginner-s-guide-783f7d7a5fcc#.81728hzhn)
 
-## Serving a static file with Express (tag v1.0.2)
+## Serving a static file with Express (tag v0.0.2)
 
 1. From the command line, install Express
     * ```npm install express --save```
@@ -129,7 +129,7 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 * [Express example](http://expressjs.com/en/starter/hello-world.html)
 * [Serving static files](http://expressjs.com/en/starter/static-files.html)
 
-## Using Webpack to Create a Modular JavaScript Project (tag v1.0.3)
+## Using Webpack to Create a Modular JavaScript Project (tag v0.0.3)
 
 1. From the command line, install Webpack and save to Dev dependencies
     * ```npm install webpack --save-dev```
@@ -171,7 +171,7 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 * [Webpack intro](http://webpack.github.io/docs/usage.html)
 * [Great article on bundling](https://medium.freecodecamp.com/javascript-modules-part-2-module-bundling-5020383cf306#.451pdkj1h)
 
-## Adding an EJS Template to Contain the Bundled Project (tag v1.0.4)
+## Adding an EJS Template to Contain the Bundled Project (tag v0.0.4)
     
 The bundled project is added via \<script\> tag to the template.  The server created in server.js will then use Express to serve the template as a static file to the browser.    
 
@@ -243,7 +243,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
 * [Using template engines with Express](http://expressjs.com/en/guide/using-template-engines.html)
     
     
-## Adding React and Babel Loader for transpiling React, ES6 and JSX syntax to Javascript (tag v1.0.5)
+## Adding React and Babel Loader for transpiling React, ES6 and JSX syntax to Javascript (tag v0.0.5)
 
 1. From the command line, install React and React DOM into your DEV dependencies
     ```
@@ -323,7 +323,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
 * [ES2015 preset](http://babeljs.io/docs/plugins/preset-es2015/#basic-setup-with-the-cli-)
 
 
-## Adding and Debugging a React Form (tag v1.0.6)
+## Adding and Debugging a React Form (tag v0.0.6)
 
 1. Creating your simple root App in React
     * Add a file named App.js to src/client with the following:
@@ -451,7 +451,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
 * [React Chrome Developer Tools](https://facebook.github.io/react/blog/2014/01/02/react-chrome-developer-tools.html)
  
 
-## Adding Hotloading (tag v1.0.7)
+## Adding Hotloading (tag v0.0.7)
 
 WARNING!  This topic gets rather involved and may require alot of coffee and reading if you really want to understand it, but delivers awesome results!
 
@@ -597,7 +597,7 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
 * [Webpack Dev Middleware](https://webpack.github.io/docs/webpack-dev-middleware.html)
     
 
-## Adding React-Redux (tag v1.0.8)
+## Adding React-Redux (tag v0.0.8)
 
 If some of the structure we create here feels a bit opinionated, don't worry.  You can structure this however you want.  I'm only doing this to try to make the concepts clearer. 
 
@@ -777,7 +777,7 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
 * [Redux Webpack ES6 Boilerplate on GitHub](https://github.com/nicksp/redux-webpack-es6-boilerplate)
 * [Babel Preset Stage 0](https://babeljs.io/docs/plugins/preset-stage-0/)
 
-## Adding React Routing (tag v1.0.9)
+## Adding React Routing (tag v0.0.9)
 
 1. Install React-Router
     * From the command line,
@@ -923,7 +923,7 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
 
 * [React-Router docs](https://github.com/ReactTraining/react-router/tree/master/docs)
 
-## Separating Local from Production Code (tag v1.0.10)
+## Separating Local from Production Code (tag v0.0.10)
 We are going to separate our "local" code (with features like hot reloading and automatically opening the browser on startup), from our "non-local" code (that doesn't have those bells and whistles but is more optimized for production.)
 The naming convention for the environments is honestly a bit confusing.    
 * The "development" environment really means local development only.  This excludes non-prod and production environments.
