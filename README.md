@@ -25,7 +25,7 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 
 * [Install and work thru a few NodeJS Tutorials](https://github.com/workshopper/learnyounode)
 
-## Hello World from the server-side (tag v1.0.1)
+## Hello World from the server-side (tag v0.0.1)
 
 1. Clone from GIT repo
 
@@ -65,7 +65,7 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 * [Running scripts with npm](https://docs.npmjs.com/cli/run-script)
 * [Great article on modules](https://medium.freecodecamp.com/javascript-modules-a-beginner-s-guide-783f7d7a5fcc#.81728hzhn)
 
-## Serving a static file with Express (tag v1.0.2)
+## Serving a static file with Express (tag v0.0.2)
 
 1. From the command line, install Express
     * ```npm install express --save```
@@ -129,7 +129,7 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 * [Express example](http://expressjs.com/en/starter/hello-world.html)
 * [Serving static files](http://expressjs.com/en/starter/static-files.html)
 
-## Using Webpack to Create a Modular JavaScript Project (tag v1.0.3)
+## Using Webpack to Create a Modular JavaScript Project (tag v0.0.3)
 
 1. From the command line, install Webpack and save to Dev dependencies
     * ```npm install webpack --save-dev```
