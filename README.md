@@ -25,7 +25,7 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 
 * [Install and work thru a few NodeJS Tutorials](https://github.com/workshopper/learnyounode)
 
-## Hello World from the server-side (tag v1.0.1)
+## Hello World from the server-side (tag v0.0.1)
 
 1. Clone from GIT repo
 
