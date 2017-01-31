@@ -40,7 +40,8 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 
 1. Create minimal server file
     * create new file "server.js"
-    * Add the following:  "console.log("Hello World!");" and save
+    * Add the following and save:
+    * ```console.log("Hello World!");```
     
 1. From command line, create package.json
     * ```run npm init```
@@ -105,7 +106,10 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
      
 1. Tell npm that the server.js file moved
     * Edit package.json, "scripts" section
-    * Change the local command to ```"local": "node ./src/server/server.js"```
+    * Change the local command to:
+        ```javascript
+        "local": "node ./src/server/server.js"
+        ```
 
 1. Test from the command line
     * ```npm run local```
@@ -138,10 +142,12 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 1. Create your bundle with Webpack manually
     * In the src/client folder, create a file called index.js and add the following:
         ```javascript
-           console.log("Hello World from the Client!");
+        console.log("Hello World from the Client!");
         ```
     * The from the command line, run
-        ```webpack ./src/client/index.js ./bin/bundle.js```
+        ```javascript
+        webpack ./src/client/index.js ./bin/bundle.js
+        ```
     
 1. Test from the command line
     * ```node bin/bundle.js```
