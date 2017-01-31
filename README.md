@@ -515,7 +515,7 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
         * with
         
             ```javascript
-            path: path.resolve(__dirname, 'dist'),
+            path: path.resolve(__dirname, 'bin'),
             ```
     * Edit server.js file
         * Add webpack-dev-middleware the usual way, then add webpack-hot-middleware to the Express server
