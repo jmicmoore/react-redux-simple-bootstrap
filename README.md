@@ -1243,3 +1243,5 @@ Also, there are already plenty or resources that cover these topics.
 
 1. If you are using a non-standard SSH key (ie. something other than id_rsa) and are having trouble with pushing from IDEA, make sure IntelliJ is using the Native SSH agent.
     * ```Preferences > Version Control > Git > SSH Executable:  Native```
+
+
