@@ -1074,6 +1074,20 @@ Now that we have this code logically partitioned off as a development-ONLY step,
     // from above code
     var webpackConfig = require('../../webpack.local.config');
     ```
+1. Adapt how server.js listens to the port.  You don't want to hardcode the port to 3000 because some containers like Cloud Foundry will assign a default port to the app.
+    ```javascript
+    var express = require('express');
+    var app = express();
+    // Add this line
+    var PORT = process.env.PORT || 3000;
+    
+    ...
+ 
+    // Change app.listen to use port
+     app.listen(PORT, () => {
+         console.log('Server listening on port:', PORT);
+     });
+    ```
 1. BONUS:  Add automatic browser opening to save a step during restarts.  (I know, I should have introduced this sooner.)
     * Install Opener from the command line:
         ```javascript
@@ -1081,13 +1095,14 @@ Now that we have this code logically partitioned off as a development-ONLY step,
         ```
     * Replace the Express startup callback function:
         ```javascript
-        app.listen(process.env.PORT || 3000, () => {
-            console.log('Server listening on port 3000!');
+        app.listen(PORT, () => {
+           console.log('Server listening on port:', PORT);
         });
         ```
     * With this:
         ```javascript
-        app.listen(process.env.PORT || 3000, () => {
+        app.listen(PORT, () => {
+          console.log('Server listening on port:', PORT);
             if(process.env.NODE_ENV === 'development') {
                 require('opener')('http://localhost:3000');
             }
@@ -1149,10 +1164,15 @@ There are other things that need to be done in this project before it is product
 These will not be covered here for several reasons.
 How some of this stuff is done depends on the environment you will be deploying to.
 Also, there are already plenty or resources that cover these topics.
-* Replace hard-coded strings with environment variables.
 * Unit testing
 * Standardized error handling
 * Incorporating styles (like Bootstrap or Material UI)
+* Deployment concerns - Cloud Foundry
+    * Replacing hard-coded strings with environment variables.
+    * Common causes why new apps fail health check:
+        1. Targeting older versions that don't support ES6 features - can give some weird error messages.
+        1. Hardcoding the port to 3000 (because Cloud Foundry wants to assign a default port to the app)
+        1. Listing dependencies in the wrong order in your template file.  For example, you list the bundle.js dependency before a style reference that it depends on.
 * Etc...
 
 **Troubleshooting**

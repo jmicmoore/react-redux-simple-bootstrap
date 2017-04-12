@@ -3,6 +3,7 @@
  */
 var express = require('express');
 var app = express();
+var PORT = process.env.PORT || 3000;
 
 if(process.env.NODE_ENV !== 'production'){
     console.log('Starting Development Environment...');
@@ -37,8 +38,8 @@ app.get('*', function(req, res) {
     res.render('index');
 });
 
-app.listen(process.env.PORT || 3000, () => {
-
+app.listen(PORT, () => {
+    console.log('Server listening on port:', PORT);
     if(process.env.NODE_ENV === 'development') {
         require('opener')('http://localhost:3000');
     }
