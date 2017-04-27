@@ -645,11 +645,11 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
             let newState = {...state};
         
             if(action.type === 'user/SET_FIRST_NAME') {
-                newState.firstName = action.payload.firstName;
+                newState.firstName = action.payload;
             }
         
             if(action.type === 'user/SET_LAST_NAME') {
-                newState.firstName = action.payload.firstName;
+                newState.firstName = action.payload;
             }
         
             return newState;
