@@ -2,21 +2,15 @@
  * Created by jmoor6 on 12/17/16.
  */
 
-const initialState = {
-    firstName: 'Unknown',
-    lastName: ''
-};
-
-// TODO: Why does using initialState here cause a React Warning?
 export const userReducer = ( state = {}, action) => {
     let newState = {...state};
 
     if(action.type === 'user/SET_FIRST_NAME') {
-        newState.firstName = action.payload.firstName;
+        newState.firstName = action.payload;
     }
 
     if(action.type === 'user/SET_LAST_NAME') {
-        newState.lastName = action.payload.lastName;
+        newState.lastName = action.payload;
     }
 
     return newState;

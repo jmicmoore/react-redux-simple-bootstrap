@@ -6,7 +6,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import * as userActions from '../actions/userActions';
 
-class App extends React.Component {
+class UserProfile extends React.Component {
     constructor(props) {
         super(props);
         this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
@@ -53,4 +53,4 @@ const mapDispatchToProps = () => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);

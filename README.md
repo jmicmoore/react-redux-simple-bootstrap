@@ -645,11 +645,11 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
             let newState = {...state};
         
             if(action.type === 'user/SET_FIRST_NAME') {
-                newState.firstName = action.payload.firstName;
+                newState.firstName = action.payload;
             }
         
             if(action.type === 'user/SET_LAST_NAME') {
-                newState.firstName = action.payload.firstName;
+                newState.firstName = action.payload;
             }
         
             return newState;
@@ -845,7 +845,7 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
 1. Create a User Profile component
     * From the src/client folder, create a folder called "components"
     * Copy the App.js file into the src/client components folder
-    * Rename the copy to "userProfile.js"
+    * Rename the copy to "UserProfile.js"
     * Edit UserProfile.js and rename App to UserProfile (should be 2 places)
     * Go back to the original App.js file and replace its contents with below:
         ```javascript
