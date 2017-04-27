@@ -8,6 +8,9 @@ import Routes from './routes';
 import { AppContainer } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import store from './store';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+
+injectTapEventPlugin();
 
 renderWithHotReload(Routes);
 

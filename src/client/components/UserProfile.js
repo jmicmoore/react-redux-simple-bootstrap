@@ -4,9 +4,10 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
+import TextField from 'material-ui/TextField';
 import * as userActions from '../actions/userActions';
 
-class App extends React.Component {
+class UserProfile extends React.Component {
     constructor(props) {
         super(props);
         this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
@@ -23,16 +24,10 @@ class App extends React.Component {
 
     render(){
         return (
-            <form>
-                <label>
-                    First Name:
-                    <input type="text" value={this.props.firstName} onChange={this.handleFirstNameChange} />
-                </label>
-                <label>
-                    Last Name:
-                    <input type="text" value={this.props.lastName} onChange={this.handleLastNameChange} />
-                </label>
-            </form>
+            <div>
+                <TextField id='first-name' hintText="Enter First Name" value={this.props.firstName} onChange={this.handleFirstNameChange}/>
+                <TextField id='last-name' hintText="Enter Last Name" value={this.props.lastName} onChange={this.handleLastNameChange}/>
+            </div>
         );
     }
 };
@@ -53,4 +48,4 @@ const mapDispatchToProps = () => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);

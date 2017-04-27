@@ -1228,15 +1228,93 @@ Now that we have this code logically partitioned off as a development-ONLY step,
 * [React App.Set - talks about NODE_ENV](http://expressjs.com/en/api.html#app.set)
 * [Opener](https://github.com/domenic/opener)
 
+## Incorporating Material UI (tag v0.0.11)
+There are many Material Design frameworks to choose from (look at Resources).  Here we add Material UI to the project.
+
+1. From the command line, install Material UI
+    * ```npm install material-ui --save```
+
+1. Material UI usees the react-tap-event-plugin to listen for touch / tap / clickevents. This dependency is temporary and will go away once the official React version is released. Until then, be sure to inject this plugin at the start of your app.
+    * Install the react-tap-event-plugin (at the time of this writing you should use v.2.0.1 for React ^15.4.0.)
+    
+        ```npm install react-tap-event-plugin@2.0.1 --save```
+        
+    * Edit index.js and index.local.js to inject the plugin.
+
+        ```javascript
+        import injectTapEventPlugin from 'react-tap-event-plugin';
+        
+        // Put this in the first line of code after imports
+        injectTapEventPlugin();
+        ```
+1. Beginning with v0.15.0, Material-UI components require a theme to be provided. The quickest way to get up and running is by using the MuiThemeProvider to inject the theme into your application context.
+    * Edit App.js and add an import for the MuiThemeProvider:
+    
+        ```javascript
+        import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+        ```
+        
+    * Wrap the outermost div with the MuiThemeProvider
+    
+        ```javascript
+        class App extends React.Component {
+        
+            render() {
+                return (
+                    <MuiThemeProvider>
+                        <div>
+                            {this.props.children}
+                        </div>
+                    </MuiThemeProvider>
+                );
+            }
+        }
+        
+        export default connect()(App);
+        ```
+        
+1. Replace HTML elements with Material UI components in the UserProfile.js file
+    * Edit UserProfile.js and add the following import
+    
+        ```javascript
+        import TextField from 'material-ui/TextField';
+        ```
+        
+    * Replace the render function with the following:
+    
+        ```javascript
+        render(){
+            return (
+                <div>
+                    <TextField id='first-name' hintText="Enter First Name" value={this.props.firstName} onChange={this.handleFirstNameChange}/>
+                    <TextField id='last-name' hintText="Enter Last Name" value={this.props.lastName} onChange={this.handleLastNameChange}/>
+                </div>
+            );
+        }
+        ```
+
+1. Test in the Browser
+    * From a terminal run:  ```npm run local```
+    * Chrome will open to "localhost:3000/"
+    * Edit the URL to "localhost:3000/profile"
+        * You should see the form for First Name and Last Name but with the Material UI's underlined styles and text hints.
+        * Try typing into the fields to see the text hints disappear
+### Resources
+
+* [Material Design by Google](https://material.io/guidelines/material-design/introduction.html)
+* [Best Material Design Frameworks](http://tutorialzine.com/2016/03/the-15-best-material-design-frameworks-and-libraries/)
+* [Material UI](http://www.material-ui.com/#/)
+
 ## Moving Forward
 There are other things that need to be done in this project before it is production ready.
 These will not be covered here for several reasons.
 How some of this stuff is done depends on the environment you will be deploying to.
 Also, there are already plenty or resources that cover these topics.
 * Replace hard-coded strings with environment variables.
-* Unit testing
 * Standardized error handling
 * Incorporating styles (like Bootstrap or Material UI)
+* Unit Testing with Jest
+* Docker Containers
 * Etc...
 
 **Troubleshooting**
