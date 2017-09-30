@@ -843,21 +843,20 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
     * From the command line,
     
        ```
-       npm install react-router --save-dev
+       npm install react-router-dom --save-dev
        ```
 1. From the src/client folder, add a new file called "routes.js" and add the following:
 
     ```javascript
     import React from 'react';
-    import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+    import {BrowserRouter} from 'react-router-dom'
     import App from './App';
     
     const Routes = () => {
         return (
-            <Router history={browserHistory}>
-                <Route path="/" component={App}>
-                </Route>
-            </Router>
+            <BrowserRouter>
+                <App/>
+            </BrowserRouter>
         );
     };
     
@@ -914,25 +913,7 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
     * Copy the App.js file into the src/client components folder
     * Rename the copy to "userProfile.js"
     * Edit UserProfile.js and rename App to UserProfile (should be 2 places)
-    * Go back to the original App.js file and replace its contents with below:
-    
-        ```javascript
-        import React from 'react';
-        import {connect} from 'react-redux';
-        
-        class App extends React.Component {
-        
-            render() {
-                return (
-                    <div>
-                        {this.props.children}
-                    </div>
-                );
-            }
-        }
-        
-        export default connect()(App);
-        ```
+
 1. Create a Home component
     * From src/client/components folder, create a file called "Home.js" and add the following:
     
@@ -953,34 +934,33 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
         
         export default connect()(Home);
         ```
-1. Add the new pages to React Router
-    * Add Home.js as the default route
+1. Add the new routes to App component
+    * Add Home.js as the root route ("/")
         * Add an import for Home.js
-        * Inside the Route for path="/", add an Index Route that points to the Home component
-    * Add UserProfile.js as a new route mapped to "profile"
+        * Add a new Route for path="/" that points to the Home component
+    * Add UserProfile.js as a new route mapped to "/profile"
         * Add an import for UserProfile.js
-        * Inside the Route for path="/", add a new Route for path="profile" that points to UserProfile
-    * Once this is done, your code for routes should look like the following:     
-    
+        * Add a new Route for path="/profile" that points to UserProfile
+    * Once this is done, your code for App.js should look like the following:     
         ```javascript
         import React from 'react';
-        import { Router, Route, IndexRoute, browserHistory } from 'react-router';
-        import App from './App';
+        import {connect} from 'react-redux';
+        import {Route, withRouter} from 'react-router-dom'
         import Home from './components/Home';
         import UserProfile from './components/UserProfile';
         
-        const Routes = () => {
-            return (
-                <Router history={browserHistory}>
-                    <Route path="/" component={App}>
-                        <IndexRoute component={Home}/>
-                        <Route path="profile" component={UserProfile}/>
-                    </Route>
-                </Router>
-            );
-        };
+        class App extends React.Component {
+            render() {
+                return (
+                    <div>
+                        <Route exact path="/" component={Home}/>
+                        <Route path="/profile" component={UserProfile}/>
+                    </div>
+                );
+            }
+        }
         
-        export default Routes;
+        export default withRouter(connect()(App));
         ```
 1. Test in the Browser
     * (We are skipping the bundling and running steps from this point on.)
@@ -993,7 +973,7 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
 
 * [React-Router docs](https://github.com/ReactTraining/react-router/tree/master/docs)
 
-## Separating Local from Production Code (tag v0.0.10)
+## Step 10 - Separating Local from Production Code
 We are going to separate our "local" code (with features like hot reloading and automatically opening the browser on startup), from our "non-local" code (that doesn't have those bells and whistles but is more optimized for production.)
 The naming convention for the environments is honestly a bit confusing.    
 * The "development" environment really means local development only.  This excludes non-prod and production environments.
@@ -1061,12 +1041,12 @@ You can name your environment variables anyway you want, but be aware that some 
                     filename: 'bundle.js'
                 },
                 module: {
-                    loaders: [
+                    rules: [
                         {
                             test: /\.(js|jsx)$/,
                             exclude: /node_modules/,
                             loader: 'babel-loader',
-                            query: {
+                            options: {
                                 presets: ['es2015', 'react', 'stage-0']
                             }
                         }
@@ -1230,7 +1210,7 @@ Now that we have this code logically partitioned off as a development-ONLY step,
 * [React App.Set - talks about NODE_ENV](http://expressjs.com/en/api.html#app.set)
 * [Opener](https://github.com/domenic/opener)
 
-## Incorporating Material UI (tag v0.0.11)
+## Step 11 - Incorporating Material UI
 There are many Material Design frameworks to choose from (look at Resources).  Here we add Material UI to the project.
 
 1. From the command line, install Material UI
@@ -1260,19 +1240,19 @@ There are many Material Design frameworks to choose from (look at Resources).  H
     
         ```javascript
         class App extends React.Component {
-        
             render() {
                 return (
                     <MuiThemeProvider>
                         <div>
-                            {this.props.children}
+                            <Route exact path="/" component={Home}/>
+                            <Route path="/profile" component={UserProfile}/>
                         </div>
                     </MuiThemeProvider>
                 );
             }
         }
         
-        export default connect()(App);
+        export default withRouter(connect()(App));
         ```
         
 1. Replace HTML elements with Material UI components in the UserProfile.js file
