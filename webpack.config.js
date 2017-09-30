@@ -8,6 +8,7 @@ module.exports = {
     entry: './src/client/index.js',
     output: {
         path: path.resolve(__dirname, 'bin'),
+        publicPath: "/my-cool-app",
         filename: 'bundle.js'
     },
     module: {

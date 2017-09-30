@@ -4,7 +4,7 @@ import App from './App';
 
 const Routes = () => {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename='/my-cool-app'>
             <App/>
         </BrowserRouter>
     );

@@ -13,6 +13,7 @@ module.exports = {
     ],
     output: {
         path: path.resolve(__dirname, 'bin'),
+        publicPath: "/my-cool-app",
         filename: 'bundle.js'
     },
     plugins: [

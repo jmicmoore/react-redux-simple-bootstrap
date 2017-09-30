@@ -15,7 +15,7 @@ class App extends React.Component {
             <MuiThemeProvider>
                 <div>
                     <Route exact path="/" component={Home}/>
-                    <Route path="/profile" component={UserProfile}/>
+                    <Route path="/nested/profile" component={UserProfile}/>
                 </div>
             </MuiThemeProvider>
         );

@@ -1287,6 +1287,149 @@ There are many Material Design frameworks to choose from (look at Resources).  H
 * [Best Material Design Frameworks](http://tutorialzine.com/2016/03/the-15-best-material-design-frameworks-and-libraries/)
 * [Material UI](http://www.material-ui.com/#/)
 
+## Step 12 - Adding a Base URL
+Most apps don't run from "localhost:3000/", they have the app name as the base part of the URL.  We are going to use "/my-cool-app" as the base name.
+
+1. Add a router that is mounted at the application's base URL.  Make the following edits in server.js:
+    * Add the following near the imports:
+    ```javascript
+    const router = express.Router();
+    const appBaseUrl =  '/my-cool-app';
+    ```
+
+    * Have the new router serve the static content and render the index.js file by replacing the following code:
+    ```javascript
+    app.use(express.static('./bin'));
+    app.get('*', function(req, res) {
+        res.render('index');
+    });
+    ```
+    
+    * With this code:
+    ```javascript
+    router.use(express.static('./bin'));
+    router.get('*', function(req, res) {
+        res.render('index');
+    });
+    ```
+    
+    * Add the following code to mount the router at the base URL:
+    ```javascript
+    app.use(appBaseUrl, router);
+    ```
+    
+1. Add a relative base path to the bundle.js referenced in the index.ejs template file.
+
+    * Edit index.ejs to replace:
+    ```javascript
+    <script type="text/javascript" src="/bundle.js"></script>
+    ```
+
+    * with this:
+    ```javascript
+    <script type="text/javascript" src="<%=appBaseUrl%>/bundle.js"></script>
+    ```
+    
+    * You will also need to pass the appBaseUrl variable into the template.  To do this, edit server.js again and replace:
+    
+    ```javascript
+    router.use(express.static('./bin'));
+    router.get('*', function(req, res) {
+        res.render('index');
+    });
+    ```
+    
+    * With this:
+    ```javascript
+    router.use(express.static('./bin'));
+    router.get('*', function(req, res) {
+        res.render('index', {
+            appBaseUrl
+        });
+    });
+    ```
+
+1. Tell Webpack to use our base name as part of the the public URL when referenced in a browser.
+
+    * Edit both webpack.config.js and webpack.local.config.js and add a publicPath with "/my-cool-app" as the value:
+    
+    ```javascript
+    output: {
+        path: path.resolve(__dirname, 'bin'),
+        publicPath: "/my-cool-app",    // <-- add this!
+        filename: 'bundle.js'
+    },
+    ```
+
+    * Edit server.js to configure the webpackDevMiddleware the same way.  Replace this:
+    
+    ```javascript
+    publicPath: '/',
+    ```
+    
+    * With this:
+    
+    ```javascript
+    publicPath: webpackConfig.output.publicPath,
+    ```
+
+1. Tell React Router about the base URL.
+
+    * Edit routes.js and replace this:
+    
+    ```javascript
+    <BrowserRouter>
+    ```
+
+    * With this:
+    
+    ```javascript
+    <BrowserRouter basename='/my-cool-app'>
+    ```
+    
+1. Finally, so the app automatically opens correctly in the browser, up the URL for the opener library.
+    
+    * Edit server.js and replace this:
+    ```javascript
+    if(process.env.NODE_ENV === 'development') {
+        require('opener')('http://localhost:3000');
+    }
+    ```
+    
+    * With this:
+    ```javascript
+    if(process.env.NODE_ENV === 'development') {
+        require('opener')('http://localhost:3000' + appBaseUrl);
+    }
+    ```
+1. Trying out a nested route is a good way to make sure that all parts are playing well together.
+
+    * Edit the App.js file and replace this:
+    ```javascript
+    <Route path="/profile" component={UserProfile}/>
+    ```
+
+    * With this:
+    ```javascript
+    <Route path="/nested/profile" component={UserProfile}/>
+    ```
+
+1. Test in the Browser
+    * From a terminal run:  ```npm run local```
+    * Chrome will open to "localhost:3000/my-cool-app"
+    * Edit the URL to "localhost:3000/my-cool-app/nested/profile"
+        * You should see the form for First Name and Last Name.  Try changing the text hints again (UserProfile.js) and view the changes in the browser without refreshing to make sure that hotloading is still working.
+        * If there are any issues, make sure the bundle.js is loading properly (the index.ejs template should be replaced with a ton of compacted javascript)
+    
+### Resources
+
+* [RFC-2396](http://www.ietf.org/rfc/rfc2396.txt)
+    * See 5. - Relative URI References
+    * See C.1.  Normal Examples
+* [Express API](http://expressjs.com/en/4x/api.html)
+* [Webpack Configuration - publicpath](https://webpack.js.org/configuration/output/#output-publicpath)
+* [React Router 4 - basename](https://reacttraining.com/react-router/web/api/BrowserRouter/basename-string)
+
 ## Moving Forward
 There are other things that need to be done in this project before it is production ready.
 These will not be covered here for several reasons.

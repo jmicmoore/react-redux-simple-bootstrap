@@ -3,6 +3,8 @@
  */
 var express = require('express');
 var app = express();
+const router = express.Router();
+const appBaseUrl =  '/my-cool-app';
 
 if(process.env.NODE_ENV !== 'production'){
     console.log('Starting Development Environment...');
@@ -14,7 +16,7 @@ if(process.env.NODE_ENV !== 'production'){
     const webpackDevMiddleware = require('webpack-dev-middleware');
     app.use(webpackDevMiddleware(compiler, {
         noInfo: true,
-        publicPath: '/',
+        publicPath: webpackConfig.output.publicPath,
         stats: {
             colors: true
         },
@@ -27,20 +29,22 @@ if(process.env.NODE_ENV !== 'production'){
     console.log('Starting Production Environment...');
 }
 
-
-app.use(express.static('./bin'));
-
 app.set('view engine', 'ejs');
 app.set('views', 'src/server'); // tell Express our templates are in a different folder than the default
 
-app.get('*', function(req, res) {
-    res.render('index');
+router.use(express.static('./bin'));
+router.get('*', function(req, res) {
+    res.render('index', {
+        appBaseUrl
+    });
 });
+
+app.use(appBaseUrl, router);
 
 app.listen(process.env.PORT || 3000, () => {
 
     if(process.env.NODE_ENV === 'development') {
-        require('opener')('http://localhost:3000');
+        require('opener')('http://localhost:3000' + appBaseUrl);
     }
 
 });
