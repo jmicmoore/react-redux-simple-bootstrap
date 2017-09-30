@@ -1,11 +1,12 @@
 /**
  * Created by jmoor6 on 12/13/16.
  */
+const path = require('path');
 
 module.exports = {
     entry: './src/client/index.js',
     output: {
-        path: './bin',
-        filename: 'bundle.js'
+        filename: 'bundle.js',
+        path: path.resolve(__dirname, 'bin')
     }
 };

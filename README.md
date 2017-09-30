@@ -150,12 +150,14 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 1. Now, we'll add more permanent configuration.  Create the webpack.config.js file in the root folder and add the following:
 
     ```javascript
+     const path = require('path');
+
      module.exports = {
-         entry: './src/client/index.js',
-         output: {
-             path: './bin',
-             filename: 'bundle.js'
-         }
+          entry: './src/client/index.js',
+          output: {
+               filename: 'bundle.js',
+               path: path.resolve(__dirname, 'bin')
+          }
      };
     ```
 1. Bundle the project
