@@ -19,12 +19,12 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
     ],
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
                 loader: 'babel-loader',
-                query: {
+                options: {
                     presets: ['es2015', 'react', 'stage-0']
                 }
             }

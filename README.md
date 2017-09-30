@@ -25,7 +25,7 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 
 * [Install and work thru a few NodeJS Tutorials](https://github.com/workshopper/learnyounode)
 
-## Hello World from the server-side (tag v0.0.1)
+## Step 1 - Hello World from the server-side
 
 1. Clone from GIT repo
 
@@ -66,7 +66,7 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 * [Running scripts with npm](https://docs.npmjs.com/cli/run-script)
 * [Great article on modules](https://medium.freecodecamp.com/javascript-modules-a-beginner-s-guide-783f7d7a5fcc#.81728hzhn)
 
-## Serving a static file with Express (tag v0.0.2)
+## Step 2 - Serving a static file with Express
 
 1. From the command line, install Express
     * ```npm install express --save```
@@ -131,7 +131,7 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 * [Express example](http://expressjs.com/en/starter/hello-world.html)
 * [Serving static files](http://expressjs.com/en/starter/static-files.html)
 
-## Using Webpack to Create a Modular JavaScript Project (tag v0.0.3)
+## Step 3 - Using Webpack to Create a Modular JavaScript Project
 
 1. From the command line, install Webpack and save to Dev dependencies
     * ```npm install webpack --save-dev```
@@ -155,10 +155,12 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 1. Now, we'll add more permanent configuration.  Create the webpack.config.js file in the root folder and add the following:
 
     ```javascript
+     const path = require('path');   
+ 
      module.exports = {
          entry: './src/client/index.js',
          output: {
-             path: './bin',
+             path: path.resolve(__dirname, 'bin'),
              filename: 'bundle.js'
          }
      };
@@ -176,7 +178,7 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 * [Webpack intro](http://webpack.github.io/docs/usage.html)
 * [Great article on bundling](https://medium.freecodecamp.com/javascript-modules-part-2-module-bundling-5020383cf306#.451pdkj1h)
 
-## Adding an EJS Template to Contain the Bundled Project (tag v0.0.4)
+## Step 4 - Adding an EJS Template to Contain the Bundled Project
     
 The bundled project is added via \<script\> tag to the template.  The server created in server.js will then use Express to serve the template as a static file to the browser.    
 
@@ -253,7 +255,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
 * [Using template engines with Express](http://expressjs.com/en/guide/using-template-engines.html)
     
     
-## Adding React and Babel Loader for transpiling React, ES6 and JSX syntax to Javascript (tag v0.0.5)
+## Step 5 - Adding React and Babel Loader for transpiling React, ES6 and JSX syntax to Javascript
 
 1. From the command line, install React and React DOM into your DEV dependencies
 
@@ -283,7 +285,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
     
         ```javascript
         module: {
-            loaders: [
+            rules: [
                 {
                     test: /\.js$/,
                     exclude: /node_modules/,
@@ -298,16 +300,16 @@ The bundled project is added via \<script\> tag to the template.  The server cre
         ```
         npm install babel-preset-react babel-preset-es2015 --save-dev
         ```
-    * Add the query/presets section to the webpack.config.js file:
+    * Add the options/presets section to the webpack.config.js file:
     
         ```javascript
         module: {
-            loaders: [
+            rules: [
                 {
                     test: /\.(js|jsx)$/,
                     exclude: /node_modules/,
                     loader: 'babel-loader',
-                    query: {
+                    options: {
                         presets: ['es2015', 'react']
                     }
                 }
@@ -340,7 +342,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
 * [ES2015 preset](http://babeljs.io/docs/plugins/preset-es2015/#basic-setup-with-the-cli-)
 
 
-## Adding and Debugging a React Form (tag v0.0.6)
+## Step 6 - Adding and Debugging a React Form
 
 1. Creating your simple root App in React
     * Add a file named App.js to src/client with the following:
@@ -475,7 +477,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
 * [React Chrome Developer Tools](https://facebook.github.io/react/blog/2014/01/02/react-chrome-developer-tools.html)
  
 
-## Adding Hotloading (tag v0.0.7)
+## Step 7 - Adding Hotloading
 
 WARNING!  This topic gets rather involved and may require alot of coffee and reading if you really want to understand it, but delivers awesome results!
 
@@ -637,7 +639,7 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
 * [Webpack Dev Middleware](https://webpack.github.io/docs/webpack-dev-middleware.html)
     
 
-## Adding React-Redux (tag v0.0.8)
+## Step 8 - Adding React-Redux
 
 If some of the structure we create here feels a bit opinionated, don't worry.  You can structure this however you want.  I'm only doing this to try to make the concepts clearer. 
 
@@ -649,10 +651,10 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
         ```
 
 1. Configure Babel to use stage-0 (via Webpack)
-    * Edit the webpack.config.js file to add "stage-0" to the presets
+    * Edit the webpack.config.js file to add "stage-0" to the options
     
         ```javascript
-        query: {
+        options: {
             presets: ['es2015', 'react', 'stage-0']
         }
         ```
@@ -835,7 +837,7 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
 * [Redux Webpack ES6 Boilerplate on GitHub](https://github.com/nicksp/redux-webpack-es6-boilerplate)
 * [Babel Preset Stage 0](https://babeljs.io/docs/plugins/preset-stage-0/)
 
-## Adding React Routing (tag v0.0.9)
+## Step 9 - Adding React Routing
 
 1. Install React-Router
     * From the command line,
