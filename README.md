@@ -118,13 +118,7 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
     * You should see "Hello World!" in the browser
     
 1. Change the "Hello World!" header in index.html to read "Hello World from Express!" and refresh your browser.
-    * Notice that the header didn't change.
-    * From command line, restart the server
-        * type Control + C to kill it
-        * ```npm run local```
-        * Now refresh the header again, and you'll see the new message.
-        
-1. Right now there is no bundling or hot reloading, so all changes require a restart of the server.  We'll work on that next.
+    * Notice that since there is no bundling your changes are seen as soon as you save your file and refresh.
 
 ### Resources
 
