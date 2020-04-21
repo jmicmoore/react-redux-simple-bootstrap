@@ -328,12 +328,15 @@ The bundled project is added via \<script\> tag to the template.  The server cre
 1. Remove the src/client/index.html file, you are no longer using it.
 
 ### Resources
-    
-* [Installing React](https://facebook.github.io/react/docs/installation.html)  
+
+* [Creating a React App… From Scratch](https://blog.usejournal.com/creating-a-react-app-from-scratch-f3c693b84658)
+* [Add React to a Website](https://reactjs.org/docs/add-react-to-a-website.html)
+* [Create a New React App](https://reactjs.org/docs/create-a-new-react-app.html)
 * [Babel setup](https://babeljs.io/docs/setup/#installation)
-* [Configuring Webpack loaders](https://webpack.github.io/docs/using-loaders.html)
-* [React preset](http://babeljs.io/docs/plugins/preset-react/#basic-setup-with-the-cli-)
-* [ES2015 preset](http://babeljs.io/docs/plugins/preset-es2015/#basic-setup-with-the-cli-)
+* [babel-preset-es2015 -> babel-preset-env](https://babeljs.io/docs/en/env/)
+* [Configuring Webpack loaders](https://webpack.js.org/concepts/loaders/)
+* [React preset](https://babeljs.io/docs/en/next/babel-preset-react.html)
+* [Env preset](https://babeljs.io/docs/en/babel-preset-env)
 
 
 ## Step 6 - Adding and Debugging a React Form
