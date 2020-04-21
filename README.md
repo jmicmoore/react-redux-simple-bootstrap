@@ -128,8 +128,7 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 ## Step 3 - Using Webpack to Create a Modular JavaScript Project
 
 1. From the command line, install Webpack and Webpack CLI and save to Dev dependencies
-    * ```npm install webpack --save-dev```
-    * ```npm install webpack-cli --save-dev```
+    * ```npm install webpack webpack-cli --save-dev```
     * webpack is added to the "devDependencies" section of package.json
     
 1. Create your bundle with Webpack manually
@@ -293,7 +292,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
     * From the command line, install the react preset
     
         ```
-        npm install babel-preset-react babel-preset-es2015 --save-dev
+        npm install babel-loader @babel/core babel-preset-env --save-dev
         ```
     * Add the options/presets section to the webpack.config.js file:
     
@@ -305,7 +304,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
                     exclude: /node_modules/,
                     loader: 'babel-loader',
                     options: {
-                        presets: ['es2015', 'react']
+                        presets: ['env', 'react']
                     }
                 }
             ]
