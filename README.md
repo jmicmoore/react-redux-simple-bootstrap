@@ -225,7 +225,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
     ````
 
 1. Add the following script to your package.json.  This is just for convenience.
-    ```"bundle": "webpack",```
+    ```"bundle": "npx webpack",```
     
 1. From the command line, create the bundle
     ```npm run bundle```    
