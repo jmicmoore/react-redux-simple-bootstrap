@@ -272,7 +272,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
 1. From the command line, install Babel and the babel-loader
 
     ```
-    npm install babel-loader babel-core --save-dev
+    npm install babel-loader @babel/core --save-dev
     ```
 1. Add the babel-loader to your Webpack configuration.
     * Add the following to the webpack.config.js file:
@@ -292,7 +292,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
     * From the command line, install the react preset
     
         ```
-        npm install babel-loader @babel/core babel-preset-env --save-dev
+        npm install @babel/preset-react @babel/preset-env --save-dev
         ```
     * Add the options/presets section to the webpack.config.js file:
     
@@ -304,7 +304,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
                     exclude: /node_modules/,
                     loader: 'babel-loader',
                     options: {
-                        presets: ['env', 'react']
+                        presets: ['@babel/env', '@babel/react']
                     }
                 }
             ]
