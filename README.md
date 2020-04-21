@@ -161,7 +161,7 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
      };
     ```
 1. Bundle the project
-    * ```webpack```
+    * ```npx webpack```
     
 1. Test from the command line
     * ```node dist/bundle.js```
