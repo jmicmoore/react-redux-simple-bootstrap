@@ -32,9 +32,9 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 1. Go into new folder
     * ```cd react-redux-simple-bootstrap```
     
-1. Create src and bin folders
+1. Create src and dist folders
     * ```mkdir src```
-    * ```mkdir bin```
+    * ```mkdir dist```
     
 1. Go into src folder
 
@@ -127,8 +127,9 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
 
 ## Step 3 - Using Webpack to Create a Modular JavaScript Project
 
-1. From the command line, install Webpack and save to Dev dependencies
+1. From the command line, install Webpack and Webpack CLI and save to Dev dependencies
     * ```npm install webpack --save-dev```
+    * ```npm install webpack-cli --save-dev```
     * webpack is added to the "devDependencies" section of package.json
     
 1. Create your bundle with Webpack manually
@@ -140,10 +141,10 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
     * The from the command line, run
     
         ```javascript
-        webpack ./src/client/index.js ./bin/bundle.js
+        npx webpack src/client/index.js -o dist/bundle.js
         ```
 1. Test from the command line
-    * ```node bin/bundle.js```
+    * ```node dist/bundle.js```
     * You should see "Hello World from the Client!" on the command line.
     
 1. Now, we'll add more permanent configuration.  Create the webpack.config.js file in the root folder and add the following:
@@ -154,7 +155,7 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
      module.exports = {
          entry: './src/client/index.js',
          output: {
-             path: path.resolve(__dirname, 'bin'),
+             path: path.resolve(__dirname, 'dist'),
              filename: 'bundle.js'
          }
      };
@@ -163,7 +164,7 @@ It was built by standing on the shoulders of others.  Ie. by learning from more 
     * ```webpack```
     
 1. Test from the command line
-    * ```node bin/bundle.js```
+    * ```node dist/bundle.js```
     * You should see "Hello World from the Client!" on the command line.
     
 
@@ -209,10 +210,10 @@ The bundled project is added via \<script\> tag to the template.  The server cre
         app.set('views', 'src/server');
         ```
 
-1. Tell Express to serve static files out of the bin directory from now on.
+1. Tell Express to serve static files out of the dist directory from now on.
 
     ```javascript
-    app.use(express.static('./bin'));
+    app.use(express.static('./dist'));
     ```
      
 1. Add a route to Express to render the template on any request
@@ -506,12 +507,12 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
         * webpack-dev-middleware requires output.path to be an absolute path or '/', so we tweak the output section, replace:
         
             ```javascript
-            path: './bin',
+            path: './dist',
             ```
         * with
         
             ```javascript
-            path: path.resolve(__dirname, 'bin'),
+            path: path.resolve(__dirname, 'dist'),
             ```
     * Edit server.js file
         * Add webpack-dev-middleware the usual way, then add webpack-hot-middleware to the Express server
@@ -1031,7 +1032,7 @@ You can name your environment variables anyway you want, but be aware that some 
                 devtool: "source-map",
                 entry: './src/client/index.js',
                 output: {
-                    path: path.resolve(__dirname, 'bin'),
+                    path: path.resolve(__dirname, 'dist'),
                     filename: 'bundle.js'
                 },
                 module: {
@@ -1105,7 +1106,7 @@ You can name your environment variables anyway you want, but be aware that some 
     }
     
     
-    app.use(express.static('./bin'));
+    app.use(express.static('./dist'));
     
     app.set('view engine', 'ejs');
     app.set('views', 'src/server'); // tell Express our templates are in a different folder than the default
@@ -1293,7 +1294,7 @@ Most apps don't run from "localhost:3000/", they have the app name as the base p
 
     * Have the new router serve the static content and render the index.js file by replacing the following code:
     ```javascript
-    app.use(express.static('./bin'));
+    app.use(express.static('./dist'));
     app.get('*', function(req, res) {
         res.render('index');
     });
@@ -1301,7 +1302,7 @@ Most apps don't run from "localhost:3000/", they have the app name as the base p
     
     * With this code:
     ```javascript
-    router.use(express.static('./bin'));
+    router.use(express.static('./dist'));
     router.get('*', function(req, res) {
         res.render('index');
     });
@@ -1327,7 +1328,7 @@ Most apps don't run from "localhost:3000/", they have the app name as the base p
     * You will also need to pass the appBaseUrl variable into the template.  To do this, edit server.js again and replace:
     
     ```javascript
-    router.use(express.static('./bin'));
+    router.use(express.static('./dist'));
     router.get('*', function(req, res) {
         res.render('index');
     });
@@ -1335,7 +1336,7 @@ Most apps don't run from "localhost:3000/", they have the app name as the base p
     
     * With this:
     ```javascript
-    router.use(express.static('./bin'));
+    router.use(express.static('./dist'));
     router.get('*', function(req, res) {
         res.render('index', {
             appBaseUrl
@@ -1349,7 +1350,7 @@ Most apps don't run from "localhost:3000/", they have the app name as the base p
     
     ```javascript
     output: {
-        path: path.resolve(__dirname, 'bin'),
+        path: path.resolve(__dirname, 'dist'),
         publicPath: "/my-cool-app",    // <-- add this!
         filename: 'bundle.js'
     },
