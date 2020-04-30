@@ -505,7 +505,7 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
                new webpack.HotModuleReplacementPlugin(),
             ]
             ```        
-        * webpack-dev-middleware requires output.path to be an absolute path or '/', so make sure output.path looke like the following:              
+        * webpack-dev-middleware requires output.path to be an absolute path or '/', so make sure output.path looks like the following:              
             ```javascript
             output: {
                path: path.resolve(__dirname, 'dist'),
@@ -605,10 +605,9 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
             ```
  
 1. Test Hotloading on the Browser.
-    * Reload your changes
-    
+    * Delete your /dist/bundle.js file (we don't want this misleading us if there's an error)
+    * Reload your changes    
         ```
-        npm run bundle
         npm run local        
         ```
     * You should see
@@ -617,13 +616,11 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
     * Open Chrome to "localhost:3000/"
         * You should see fields for First Name and Last Name on the page
     * Type your first and last names into the fields
-    * NOW go into App.js and replace the following:
-    
+    * NOW go into App.js and replace the following:    
         ```javascript
         First Name:
         ```
-    * with
-    
+    * with    
         ```javascript
         My First Name:
         ```
