@@ -476,7 +476,7 @@ The bundled project is added via \<script\> tag to the template.  The server cre
 
 ## Step 7 - Adding Hotloading
 
-WARNING!  This topic gets rather involved and may require alot of coffee and reading if you really want to understand it, but delivers awesome results!
+WARNING!  This topic gets rather involved and may require alot of coffee and reading if you really want to understand it, but delivers awesome results!  This was done following Gearon's "Getting Started" article (linked below) with a few updates (since the article is a bit dated.)
 
 1. Install Webpack Hot Middleware and Webpack Dev Middleware
     * From command line
@@ -488,108 +488,120 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
         * Add the following imports:
         
             ```javascript
-            const path = require('path');
             const webpack = require('webpack');
             ```
+        * Add 'webpack-hot-middleware/client' into the entry array before index.js.
+        
+            ```javascript
+            entry: [
+                'webpack-hot-middleware/client', // <- add here BEFORE index.js
+                './src/client/index.js'
+            ],
+            ```            
         * Add the following plugin to the plugins array:
         
             ```javascript
             plugins: [
                new webpack.HotModuleReplacementPlugin(),
             ]
-            ```
-        * Add 'webpack-hot-middleware/client' into the entry array before index.js.
-        
+            ```        
+        * webpack-dev-middleware requires output.path to be an absolute path or '/', so make sure output.path looke like the following:              
             ```javascript
-            entry: [
-                'webpack-hot-middleware/client',
-                './src/client/index.js'
-            ],
+            output: {
+               path: path.resolve(__dirname, 'dist'),
+               filename: 'bundle.js'
+            },
             ```
-        * webpack-dev-middleware requires output.path to be an absolute path or '/', so we tweak the output section, replace:
-        
+        * Configure babel-loader with the react-hot-loader plugin:
             ```javascript
-            path: './dist',
-            ```
-        * with
-        
-            ```javascript
-            path: path.resolve(__dirname, 'dist'),
+            module: {
+               rules: [
+                  {
+                     test: /\.js$/,
+                     exclude: /node_modules/,
+                     loader: 'babel-loader',
+                     options: {
+                        presets: ['@babel/env', '@babel/react'],
+                        plugins: ['react-hot-loader/babel'] // <- Add this line HERE!
+                     }
+                  }
+               ]
+            }
             ```
     * Edit server.js file
-        * Add webpack-dev-middleware the usual way, then add webpack-hot-middleware to the Express server
+        * Add webpack-dev-middleware and webpack-hot-middleware to the Express server.  To keep things consistent, we are pulling in the WebPack config file and using it to configure the new middleware.
         
             ```javascript
-            var webpack = require('webpack');
-            var webpackConfig = require('../../webpack.config');
-            var compiler = webpack(webpackConfig);
-            
-            const webpackDevMiddleware = require('webpack-dev-middleware');           
-            app.use(webpackDevMiddleware(compiler, {
-                noInfo: true,
-                publicPath: '/',
-                stats: {
-                  colors: true
-                },
-                historyApiFallback: true
-            }));
-  
-            const webpackHotMiddleware = require('webpack-hot-middleware');
-            app.use(webpackHotMiddleware(compiler));
+            const express = require('express')
+            const webpack = require('webpack');                               // <- add
+            const webpackConfig = require('../../webpack.config');            // <- add
+            const webpackHotMiddleware = require('webpack-hot-middleware');   // <- add
+            const webpackDevMiddleware = require('webpack-dev-middleware');   // <- add
+            const app = express()
+
+
+            const compiler = webpack(webpackConfig);                          // <- add
+            app.use(webpackDevMiddleware(compiler));                          // <- add
+            app.use(webpackHotMiddleware(compiler));                          // <- add
+
+            app.set('view engine', 'ejs')
+            app.set('views', 'src/server')
+
+            app.use(express.static('./dist'))
+
+
+            app.get('*', function(req, res) {
+                res.render('index.ejs');
+            });
+
+            app.listen(3000,
+                () => console.log('Express is now listening on port 3000!')
+            )
+
             ```
         
-1. Install React Hot Loader (NOTE: we don't want the latest release, we want the 3.0 beta 2 version, so we must be explicit!)
-    * Add the following to devDependencies section of package.json: 
-    
-        ```javascript
-        "react-hot-loader": "^3.0.0-beta.2",
+1. Install React Hot Loader
+    * From command line    
         ```
-    * From the command line
-    
-        ```
-        npm install
+        npm install react-hot-loader --save-dev
         ```
     * Edit webpack.config.js file and add one more entry ('react-hot-loader/patch') as the FIRST item in the entry array
     
         ```javascript
         entry: [
-            'react-hot-loader/patch',
+            'react-hot-loader/patch',           // <- add HERE!
             'webpack-hot-middleware/client',
             './src/client/index.js'
         ],
         ```
     * Edit the index.js file
         * Add the import for AppContainer
-        
             ```javascript
             import { AppContainer } from 'react-hot-loader';
             ```
-        * Replace this
-        
+        * Replace this:        
             ```javascript
             ReactDOM.render(
                 <App/>,
                 document.getElementById('content')
             );
             ```
-        * With this
-        
+        * With this:        
             ```javascript
-            renderWithHotReload(App);
-            
-            module.hot.accept('./App', () => {
-                const NextApp = require('./App').default;
-                renderWithHotReload(NextApp);
-            });
-            
-            function renderWithHotReload(Component) {
+            const renderWithHotReload = Component => {
                 ReactDOM.render(
                     <AppContainer>
-                        <Component/>
+                        <Component />
                     </AppContainer>,
                     document.getElementById('content')
                 );
-            };
+            }
+
+            renderWithHotReload(App);
+
+            if (module.hot) {
+                module.hot.accept('./App.js', () => { renderWithHotReload(App); })
+            }
             ```
  
 1. Test Hotloading on the Browser.
@@ -620,20 +632,17 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
         * However the values of the names are get wiped out!  Turns out the ability to do hotloading while saving the DOM state is rather tricky.  I've read several articles on how to do it, but never really go anything to work.  If you figure it out, please feel free to submit a PR!
     
 ## Resources Used for Code Snippets / Configuration
-
-* [Webpack Hot Middleware](https://github.com/glenjamin/webpack-hot-middleware) (NOTE: not all plugins from instructions were used)
-* [React Hot Boilerplate (most recent commit from 3.0 beta demo)](https://github.com/gaearon/react-hot-boilerplate/tree/9609a8e567b940ff341176638fb1169f70efd461)
+* [React Hot Loader / Getting Started](https://gaearon.github.io/react-hot-loader/getstarted/)
+* [react-hot-loader](https://github.com/gaearon/react-hot-loader)
+* [react-dev-middleware](https://github.com/webpack/webpack-dev-middleware)
+* [webpack-hot-middleware](https://github.com/webpack-contrib/webpack-hot-middleware)
 
 ## Other Related Resources
 
 * [Hot Reloading in React - Article by Dan Abramov](https://medium.com/@dan_abramov/hot-reloading-in-react-1140438583bf#.di3l5wnr4)
 * [Dan Abramov's talk on Hot Reloading with Time Travel](https://www.youtube.com/watch?v=xsSnOQynTHs)
-* [React Hot Loader on GitHub](https://github.com/gaearon/react-hot-loader)
-* [React Hot Loader v3.0 on GitHub](https://github.com/gaearon/react-hot-loader/tree/d360e3a24914db0c123ca03192bfdade48453751)
-* [React Hot Boilerplate on GitHub](https://github.com/gaearon/react-hot-boilerplate)
-* [Webpack Hot Module Replacement (HMR)](https://webpack.github.io/docs/hot-module-replacement.html)
-* [Webpack Dev Server](https://webpack.github.io/docs/webpack-dev-server.html)
-* [Webpack Dev Middleware](https://webpack.github.io/docs/webpack-dev-middleware.html)
+* [react-hot-boilerplate](https://github.com/gaearon/react-hot-boilerplate)
+* [react-hot-loader-minimal-boilerplate](https://github.com/wkwiatek/react-hot-loader-minimal-boilerplate)
     
 
 ## Step 8 - Adding React-Redux
