@@ -1160,52 +1160,13 @@ You can name your environment variables anyway you want, but be aware that some 
 There are many Material Design frameworks to choose from (look at Resources).  Here we add Material UI to the project.
 
 1. From the command line, install Material UI
-    * ```npm install material-ui --save```
-
-1. Material UI usees the react-tap-event-plugin to listen for touch / tap / clickevents. This dependency is temporary and will go away once the official React version is released. Until then, be sure to inject this plugin at the start of your app.
-    * Install the react-tap-event-plugin (at the time of this writing you should use v.2.0.1 for React ^15.4.0.)
-    
-        ```npm install react-tap-event-plugin@2.0.1 --save```
-        
-    * Edit index.js and index.local.js to inject the plugin.
-
-        ```javascript
-        import injectTapEventPlugin from 'react-tap-event-plugin';
-        
-        // Put this in the first line of code after imports
-        injectTapEventPlugin();
-        ```
-1. Beginning with v0.15.0, Material-UI components require a theme to be provided. The quickest way to get up and running is by using the MuiThemeProvider to inject the theme into your application context.
-    * Edit App.js and add an import for the MuiThemeProvider:
-    
-        ```javascript
-        import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-        ```
-        
-    * Wrap the outermost div with the MuiThemeProvider
-    
-        ```javascript
-        class App extends React.Component {
-            render() {
-                return (
-                    <MuiThemeProvider>
-                        <div>
-                            <Route exact path="/" component={Home}/>
-                            <Route path="/profile" component={UserProfile}/>
-                        </div>
-                    </MuiThemeProvider>
-                );
-            }
-        }
-        
-        export default withRouter(connect()(App));
-        ```
+    * ```npm install @material-ui/core --save```
         
 1. Replace HTML elements with Material UI components in the UserProfile.js file
     * Edit UserProfile.js and add the following import
     
         ```javascript
-        import TextField from 'material-ui/TextField';
+        import TextField from '@material-ui/core/TextField'
         ```
         
     * Replace the render function with the following:
@@ -1214,10 +1175,9 @@ There are many Material Design frameworks to choose from (look at Resources).  H
         render(){
             return (
                 <div>
-                    <TextField id='first-name' hintText="Enter First Name" value={this.props.firstName} onChange={this.handleFirstNameChange}/>
-                    <TextField id='last-name' hintText="Enter Last Name" value={this.props.lastName} onChange={this.handleLastNameChange}/>
-                </div>
-            );
+                <TextField id='first-name' label='Enter First Name' variant='outlined' value={this.props.firstName} onChange={this.handleFirstNameChange}/>
+                <TextField id='last-name' label='Enter Last Name' variant='outlined' value={this.props.lastName} onChange={this.handleLastNameChange}/>
+            </div>
         }
         ```
 
@@ -1229,9 +1189,9 @@ There are many Material Design frameworks to choose from (look at Resources).  H
         * Try typing into the fields to see the text hints disappear
 ### Resources
 
+* [Material UI](https://material-ui.com/)
 * [Material Design by Google](https://material.io/guidelines/material-design/introduction.html)
-* [Best Material Design Frameworks](http://tutorialzine.com/2016/03/the-15-best-material-design-frameworks-and-libraries/)
-* [Material UI](http://www.material-ui.com/#/)
+* [20+ Best React UI Component Libraries / Frameworks for 2020](https://www.codeinwp.com/blog/react-ui-component-libraries-frameworks/)
 
 ## Step 12 - Adding a Base URL
 Most apps don't run from "localhost:3000/", they have the app name as the base part of the URL.  We are going to use "/my-cool-app" as the base name.
