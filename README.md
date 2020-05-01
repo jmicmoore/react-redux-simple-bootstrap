@@ -606,6 +606,7 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
             ```
  
 1. Test Hotloading on the Browser.
+    * **NOTE:**  When running locally using `npm run local`, the bundling and hotloading are actually kicked off in the code instead of the command line.  This means we do not need to explicitly bundle in the command line (ie. npm run bundle).
     * Delete your /dist/bundle.js file (we don't want this misleading us if there's an error)
     * Reload your changes    
         ```
@@ -946,7 +947,7 @@ You can name your environment variables anyway you want, but be aware that some 
         * Remove the import for AppContainer
         * Rename the renderWithHotReload function to renderApp
         * Remove the entire module.hot.accept hook
-        * Remove the AppContainer element from the ReactDOM.render method (don't forget to add a comma to the end of the closing Provider element.)
+        * Remove the AppContainer element from the ReactDOM.render method.
         * After these changes, the code should look like the following:
         
             ```javascript
@@ -962,7 +963,7 @@ You can name your environment variables anyway you want, but be aware that some 
                 ReactDOM.render(
                     <Provider store={store}>
                         <Component/>
-                    </Provider>,
+                    </Provider>,                         // <- Don't forget to add a comma HERE!
                     document.getElementById('content')
                 );
             };
@@ -985,20 +986,22 @@ You can name your environment variables anyway you want, but be aware that some 
             ```
     * Edit the webpack.config.js (the non-local version) and make the following changes:
         * Remove the import for webpack
+        * Remove the development mode line
         * Remove the 'react-hot-loader/patch' and 'webpack-hot-middleware/client' lines from the "entry" field and change it from an array to a string
-        * Remove the "plugins" field
+        * Remove the HotModuleReplacementPlugin
+        * Remove the "plugins" field (with the react-hot-loader) inside the babel-loader options        
         * After these changes, the code should look like the following:
         
             ```javascript
             const path = require('path');
             
             module.exports = {
-                devtool: "source-map",
                 entry: './src/client/index.js',
                 output: {
                     path: path.resolve(__dirname, 'dist'),
                     filename: 'bundle.js'
                 },
+                devtool: 'source-map',
                 module: {
                     rules: [
                         {
@@ -1006,7 +1009,7 @@ You can name your environment variables anyway you want, but be aware that some 
                             exclude: /node_modules/,
                             loader: 'babel-loader',
                             options: {
-                                presets: ['es2015', 'react', 'stage-0']
+                                presets: ['@babel/env', '@babel/react']
                             }
                         }
                     ]
@@ -1014,7 +1017,7 @@ You can name your environment variables anyway you want, but be aware that some 
             };
             ```
 1. Configure scripts section of package.json for local and non-local targets
-    * Add environment variable to "local" script (remember "development" means local development ONLY).  We are also adding a call to bundle, since we typically want to bundle before we start locally:
+    * Add the NODE_ENV environment variable to the "local" script (remember "development" means local development ONLY):
     
         ```javascript
         "local": "NODE_ENV=development node ./src/server/server.js",
@@ -1033,7 +1036,7 @@ You can name your environment variables anyway you want, but be aware that some 
     
         ```javascript
         "scripts": {
-            "bundle": "webpack",
+            "bundle": "npx webpack",
             "local": "NODE_ENV=development node ./src/server/server.js",
             "server": "NODE_ENV=production node ./src/server/server.js",
             "start": "npm run server",
@@ -1042,57 +1045,43 @@ You can name your environment variables anyway you want, but be aware that some 
         ```
 1. Add logic to server.js to account for the 2 environments.  Specifically we will wrap the hot reloading code in a conditional checking for "development" mode:
 
-    ```javascript
-    var express = require('express');
-    var app = express();
-    
-    if(process.env.NODE_ENV !== 'production'){
-        console.log('Starting Development Environment...');
-        
-        var webpack = require('webpack');
-        var webpackConfig = require('../../webpack.local.config');
-        var compiler = webpack(webpackConfig);
-    
-        const webpackDevMiddleware = require('webpack-dev-middleware');
-        app.use(webpackDevMiddleware(compiler, {
-            noInfo: true,
-            publicPath: '/',
-            stats: {
-                colors: true
-            },
-            historyApiFallback: true
-        }));
-    
-        const webpackHotMiddleware = require('webpack-hot-middleware');
-        app.use(webpackHotMiddleware(compiler));
-    } else {
-        console.log('Starting Production Environment...');
-    }
-    
-    
-    app.use(express.static('./dist'));
-    
-    app.set('view engine', 'ejs');
-    app.set('views', 'src/server'); // tell Express our templates are in a different folder than the default
-    
-    app.get('*', function(req, res) {
-        res.render('index');
-    });
-    
-    app.listen(3000, function () {
-        console.log('Server listening on port 3000!')
-    });
-    ```
-1. **NOTE:** in the above code that we now have pointed webpack to the local config file.
-When run in "development" mode, the bundling is actually kicked off in the code instead of the command line.
-This was something I glazed over for a while now.
-Ever since we added the hot loading code, we didn't need to explicitly bundle in the command line (ie. npm run bundle) anymore because it was being bundled in the server.js file on startup.
-Now that we have this code logically partitioned off as a development-ONLY step, running a bundle through the command line will be needed for "production" startups:
+         ```javascript
+         const express = require('express')
+         const app = express()
 
-    ```javascript
-    // from above code
-    var webpackConfig = require('../../webpack.local.config');
-    ```
+         if (process.env.NODE_ENV !== 'production'){
+             console.log('Starting Development Environment...');
+
+             const webpack = require('webpack');
+             const webpackConfig = require('../../webpack.local.config');  // <- This now points to LOCAL webpack!
+             const compiler = webpack(webpackConfig);
+
+             const webpackDevMiddleware = require('webpack-dev-middleware');
+             app.use(webpackDevMiddleware(compiler));
+
+             const webpackHotMiddleware = require('webpack-hot-middleware');
+             app.use(webpackHotMiddleware(compiler));
+
+         } else {
+             console.log('Starting Production Environment...');
+         }
+
+         app.set('view engine', 'ejs')
+         app.set('views', 'src/server')
+
+         app.use(express.static('./dist'))
+
+
+         app.get('*', function(req, res) {
+             res.render('index.ejs');
+         });
+
+         app.listen(3000,
+             () => console.log('Express is now listening on port 3000!')
+         )
+         ```
+1. **NOTE:**  Now that we have this code logically partitioned off as a development-ONLY step, running a bundle through the command line will be needed ONLY for "production" startups.
+
 1. BONUS:  Add automatic browser opening to save a step during restarts.  (I know, I should have introduced this sooner.)
     * Install Opener from the command line:
     
@@ -1109,11 +1098,11 @@ Now that we have this code logically partitioned off as a development-ONLY step,
     * With this:
     
         ```javascript
-        app.listen(process.env.PORT || 3000, () => {
-            if(process.env.NODE_ENV === 'development') {
-                require('opener')('http://localhost:3000');
-            }
-        });
+         app.listen(process.env.PORT || 3000, () => {
+             if(process.env.NODE_ENV !== 'production') {
+                 require('opener')('http://localhost:3000');
+             }
+         });
         ```
 1. Test Local startup
     * From the command line, restart your app
@@ -1130,9 +1119,8 @@ Now that we have this code logically partitioned off as a development-ONLY step,
                 * You should see the index.local.js file in the folder.  Click on it and verify it has the correct contents.
                 * This is your confirmation that the client-side is correctly running in development mode. 
         * Now go back to the command line
-            * You won't see the same output that you did for bundling step.  That is because the bundling is taking place in the javascript code and not on the command line.
-            * However you should see "Starting Development Environment..." being logged from the console.
-            * This is your confirmation that the server-side is correctly running in development mode.
+        * You should see "Starting Development Environment..." being logged from the console.
+
 1. Test Non-Local startup
     * From the command line, restart your app.
     
@@ -1149,10 +1137,9 @@ Now that we have this code logically partitioned off as a development-ONLY step,
             * Now drill down from the "Top" element to "webpack://" > "." > "src/client"
                 * You should see the index.js file in the folder.  Click on it and verify it has the correct contents.
                 * This is your confirmation that the client-side is correctly running in production mode. 
-        * Now go back to the command line
-            * You should see the bundling output since we are bundling on the command line
-            * However you should see "Starting Production Environment..." being logged from the console.
-            * This is your confirmation that the server-side is correctly running in production mode.
+        * Now go back to the command line          
+        * You should see "Starting Production Environment..." being logged from the console.
+
 1. Testing is a bit tricky because there are alot of moving parts.  If you run into any trouble, verify that your code matches the checked-in code for this tag. You can also look for the following:
     * Check that webpack.config.js points to index.js and webpack.local.config.js points to index.local.js
     * Check that server.js is configuring webpack with "webpack.local.config"
