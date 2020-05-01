@@ -813,7 +813,6 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
     * However, sometimes if you have to install new libs or if you make major structual changes to you code, you may have to reload your changes
     
         ```
-        npm run bundle
         npm run local        
         ```
     * You should see
@@ -830,83 +829,22 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
 * [React Redux on GitHub](https://github.com/reactjs/react-redux)
 * [Redux Webpack ES6 Boilerplate on GitHub](https://github.com/nicksp/redux-webpack-es6-boilerplate)
 
-## Step 9 - Adding React Routing
+## Step 9 - Adding Routing
 
-1. Install React-Router
+1. Install Reach Router
     * From the command line,
     
        ```
-       npm install react-router-dom --save-dev
+       npm install @reach/router --save-dev
        ```
-1. From the src/client folder, add a new file called "routes.js" and add the following:
-
-    ```javascript
-    import React from 'react';
-    import {BrowserRouter} from 'react-router-dom'
-    import App from './App';
-    
-    const Routes = () => {
-        return (
-            <BrowserRouter>
-                <App/>
-            </BrowserRouter>
-        );
-    };
-    
-    export default Routes;
-    ```
-1. Adapt the rendering code to use React Router as the root component instead of App.  Make the following changes to the index.js file:
-    * Replace
-    
-        ```javascript
-        import App from './App';
-        ```
-    * with
-    
-        ```javascript
-        import Routes from './routes';
-        ```
-    * Replace
-    
-        ```javascript
-        renderWithHotReload(App);
-        
-        module.hot.accept('./App', () => {
-            const NextApp = require('./App').default;
-            renderWithHotReload(NextApp);
-        });
-        ```
-    * with
-    
-        ```javascript
-        renderWithHotReload(Routes);
-        
-        module.hot.accept('./routes', () => {
-            const NextApp = require('./routes').default;
-            renderWithHotReload(NextApp);
-        });
-        ```
-1. Test in the Browser
-    * If your app is still running in the terminal, you should be able to just switch to your browser and confirm that your app still works.
-    * However, sometimes if you have to install new libs or if you make major structual changes to you code, you may have to reload your changes
-    
-        ```
-        npm run bundle
-        npm run local        
-        ```
-    * You should see
-        * Server listening on port 3000!
-        * webpack built [some hex number] in [xxx] ms
-    * Open Chrome to "localhost:3000"
-        * You should see the latest fields for First Name and Last Name on the page       
-        * To demonstrate the routing, lets refactor the components a bit and add a few more routes.
-         
 1. Create a User Profile component
     * From the src/client folder, create a folder called "components"
-    * Copy the App.js file into the src/client components folder
-    * Rename the copy to "userProfile.js"
-    * Edit UserProfile.js and rename App to UserProfile (should be 2 places)
-
+    * Move the App.js file into the src/client/components folder
+    * Rename the copy to "UserProfile.js"
+    * If your IDE didn't automatically take care of this for you, then edit UserProfile.js manually
+         * Make sure class name and export line at bottom are both using UserProfile instead of App
+         * Fix the import of userAction if necessary
+         
 1. Create a Home component
     * From src/client/components folder, create a file called "Home.js" and add the following:
     
@@ -926,37 +864,64 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
         }
         
         export default connect()(Home);
-        ```
-1. Add the new routes to App component
-    * Add Home.js as the root route ("/")
-        * Add an import for Home.js
-        * Add a new Route for path="/" that points to the Home component
-    * Add UserProfile.js as a new route mapped to "/profile"
-        * Add an import for UserProfile.js
-        * Add a new Route for path="/profile" that points to UserProfile
-    * Once this is done, your code for App.js should look like the following:     
-        ```javascript
-        import React from 'react';
-        import {connect} from 'react-redux';
-        import {Route, withRouter} from 'react-router-dom'
-        import Home from './components/Home';
-        import UserProfile from './components/UserProfile';
-        
-        class App extends React.Component {
-            render() {
-                return (
-                    <div>
-                        <Route exact path="/" component={Home}/>
-                        <Route path="/profile" component={UserProfile}/>
-                    </div>
-                );
-            }
-        }
-        
-        export default withRouter(connect()(App));
-        ```
+        ```         
+1. Create a router component and add routes to UserProfile and Home
+   * From the src/client folder, add a new file called "routes.js" and add the following:
+
+      ```javascript
+      import React from 'react';
+      import { Router } from '@reach/router'
+      import UserProfile from './components/UserProfile'
+      import Home from './components/Home'
+
+      const Routes = () => {
+          return (
+              <Router>
+                  <UserProfile path='/profile' />
+                  <Home path='/' />
+              </Router>
+          );
+      };
+
+      export default Routes;
+      ```
+1. Adapt the rendering code to use React Router as the root component instead of App.  Make the following changes to the index.js file:
+      ```javascript
+      import React from 'react';
+      import ReactDOM from 'react-dom';
+      import { Provider } from 'react-redux';
+      import store from './store';
+
+      import { AppContainer } from 'react-hot-loader';
+      import Routes from './routes'                      // <- Replace HERE!  Used to be - import App from './App'
+
+      const renderWithHotReload = Component => {
+          ReactDOM.render(
+              <AppContainer>
+                  <Provider store={store}>
+                      <Component />
+                  </Provider>
+              </AppContainer>,
+              document.getElementById('content')
+          );
+      }
+
+      renderWithHotReload(Routes);                       // <- Replace App with Route HERE!
+
+      if (module.hot) {
+          module.hot.accept('./routes.js', () => { renderWithHotReload(Routes); })  // <- Replace HERE!
+      }                                                                             // used to be './App.js' and App
+      ```
 1. Test in the Browser
-    * (We are skipping the bundling and running steps from this point on.)
+    * If your app is still running in the terminal, you should be able to just switch to your browser and confirm that your app still works.
+    * However, sometimes if you have to install new libs or if you make major structual changes to you code, you may have to reload your changes
+    * (We are skipping the bundling and running steps from now on after this.)
+        ```
+        npm run local        
+        ```
+    * You should see
+        * Server listening on port 3000!
+        * webpack built [some hex number] in [xxx] ms
     * Open Chrome to "localhost:3000"
         * You should see "Hello! You are home.
     * Enter "localhost:3000/profile" in the browser's URL
@@ -964,7 +929,8 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
 
 ### Resources
 
-* [React-Router docs](https://github.com/ReactTraining/react-router/tree/master/docs)
+* [Reach Router npm](https://www.npmjs.com/package/@reach/router)
+* [Reach Router docs](https://reach.tech/router)
 
 ## Step 10 - Separating Local from Production Code
 We are going to separate our "local" code (with features like hot reloading and automatically opening the browser on startup), from our "non-local" code (that doesn't have those bells and whistles but is more optimized for production.)
