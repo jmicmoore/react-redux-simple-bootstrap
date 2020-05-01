@@ -440,11 +440,12 @@ The bundled project is added via \<script\> tag to the template.  The server cre
     * Click on the bundle.js, look at the code and search for 'handleFirstNameChange' (Command+F or Control+F)
         * This is your class after transpiling and bundling
         
-1. Ask Webpack to include source maps
+1. Ask Webpack to include source maps.  The development mode also turns off bundling minimization and makes it easier to debug your source code in the browser.
     * Edit webpack.config.js and add the following section:
     
         ```javascript
-        devtool: "source-map",
+        mode: 'development',
+        devtool: 'source-map',
         ```
     * Reload your changes
     
