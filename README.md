@@ -647,22 +647,12 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
 
 If some of the structure we create here feels a bit opinionated, don't worry.  You can structure this however you want.  I'm only doing this to try to make the concepts clearer. 
 
-1. Install Redux, React-Redux, Babel "Stage 0" Preset ("stage-0" gives you spread object syntax and a few other things)
+1. Install Redux and React-Redux
     * From the command line:
     
         ```
-        npm install redux react-redux babel-preset-stage-0 --save-dev
+        npm install redux react-redux --save-dev
         ```
-
-1. Configure Babel to use stage-0 (via Webpack)
-    * Edit the webpack.config.js file to add "stage-0" to the options
-    
-        ```javascript
-        options: {
-            presets: ['es2015', 'react', 'stage-0']
-        }
-        ```
-
 1. Create the Redux store
     * Create a new file called store.js under the client folder and add the following code:
     
@@ -839,7 +829,6 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
 * [Redux on GitHub](https://github.com/reactjs/redux)
 * [React Redux on GitHub](https://github.com/reactjs/react-redux)
 * [Redux Webpack ES6 Boilerplate on GitHub](https://github.com/nicksp/redux-webpack-es6-boilerplate)
-* [Babel Preset Stage 0](https://babeljs.io/docs/plugins/preset-stage-0/)
 
 ## Step 9 - Adding React Routing
 
