@@ -1270,28 +1270,41 @@ Most apps don't run from "localhost:3000/", they have the app name as the base p
     * Edit server.js to configure the webpackDevMiddleware the same way.  Replace this:
     
     ```javascript
-    publicPath: '/',
+    app.use(webpackDevMiddleware(compiler));
     ```
     
     * With this:
     
     ```javascript
-    publicPath: webpackConfig.output.publicPath,
+    app.use(webpackDevMiddleware(compiler, {publicPath: webpackConfig.output.publicPath}));
     ```
 
-1. Tell React Router about the base URL.
+1. Tell Reach Router about the base URL.
 
     * Edit routes.js and replace this:
     
     ```javascript
-    <BrowserRouter>
+    <Router>
     ```
 
     * With this:
     
     ```javascript
-    <BrowserRouter basename='/my-cool-app'>
+    <Router basepath='/my-cool-app'>
     ```
+    
+    * Trying out a nested route is a good way to make sure that all parts are playing well together.
+
+    * Edit routes.js file and replace this (this is just temporary):
+    ```javascript
+    <UserProfile path='/profile' />
+    ```
+
+    * With this:
+    ```javascript
+    <UserProfile path='/nested/profile' />
+    ```
+    
     
 1. Finally, so the app automatically opens correctly in the browser, up the URL for the opener library.
     
@@ -1308,18 +1321,6 @@ Most apps don't run from "localhost:3000/", they have the app name as the base p
         require('opener')('http://localhost:3000' + appBaseUrl);
     }
     ```
-1. Trying out a nested route is a good way to make sure that all parts are playing well together.
-
-    * Edit the App.js file and replace this:
-    ```javascript
-    <Route path="/profile" component={UserProfile}/>
-    ```
-
-    * With this:
-    ```javascript
-    <Route path="/nested/profile" component={UserProfile}/>
-    ```
-
 1. Test in the Browser
     * From a terminal run:  ```npm run local```
     * Chrome will open to "localhost:3000/my-cool-app"
@@ -1332,9 +1333,9 @@ Most apps don't run from "localhost:3000/", they have the app name as the base p
 * [RFC-2396](http://www.ietf.org/rfc/rfc2396.txt)
     * See 5. - Relative URI References
     * See C.1.  Normal Examples
-* [Express API](http://expressjs.com/en/4x/api.html)
-* [Webpack Configuration - publicpath](https://webpack.js.org/configuration/output/#output-publicpath)
-* [React Router 4 - basename](https://reacttraining.com/react-router/web/api/BrowserRouter/basename-string)
+* [Express Router](https://expressjs.com/en/api.html#router)
+* [Webpack public path](https://webpack.js.org/guides/public-path/)
+* [Reach Router](https://reach.tech/router/api/Router)
 
 ## Moving Forward
 There are other things that need to be done in this project before it is production ready.
