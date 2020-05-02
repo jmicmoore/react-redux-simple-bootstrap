@@ -1,6 +1,3 @@
-/**
- * Created by jmoor6 on 12/18/16.
- */
 import store from '../store';
 
 export const setFirstName = (firstName) => {

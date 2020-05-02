@@ -1,34 +1,26 @@
-/**
- * Created by jmoor6 on 12/13/16.
- */
-
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Routes from './routes';
-import { AppContainer } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import store from './store';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 
-injectTapEventPlugin();
+import { AppContainer } from 'react-hot-loader';
+import Routes from './routes'
 
-renderWithHotReload(Routes);
-
-module.hot.accept('./routes', () => {
-    const NextApp = require('./routes').default;
-    renderWithHotReload(NextApp);
-});
-
-function renderWithHotReload(Component) {
+const renderWithHotReload = Component => {
     ReactDOM.render(
         <AppContainer>
             <Provider store={store}>
-                <Component/>
+                <Component />
             </Provider>
         </AppContainer>,
         document.getElementById('content')
     );
-};
+}
 
+renderWithHotReload(Routes);
 
-console.log("Hello World from the Client!");
+if (module.hot) {
+    module.hot.accept('./routes.js', () => { renderWithHotReload(Routes); })
+}
+
+console.log("Hello World from the Client!")

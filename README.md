@@ -1257,7 +1257,7 @@ Most apps don't run from "localhost:3000/", they have the app name as the base p
 
 1. Tell Webpack to use our base name as part of the the public URL when referenced in a browser.
 
-    * Edit both webpack.config.js and webpack.local.config.js and add a publicPath with "/my-cool-app" as the value:
+    * Edit BOTH webpack.config.js and webpack.local.config.js and add a publicPath with "/my-cool-app" as the value:
     
     ```javascript
     output: {
@@ -1343,6 +1343,7 @@ These will not be covered here for several reasons.
 How some of this stuff is done depends on the environment you will be deploying to.
 Also, there are already plenty or resources that cover these topics.
 * Replace hard-coded strings with environment variables.
+* linting
 * Standardized error handling
 * Incorporating styles (like Bootstrap or Material UI)
 * Unit Testing with Jest

@@ -1,32 +1,31 @@
-/**
- * Created by jmoor6 on 12/13/16.
- */
 const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-    devtool: "source-map",
+    mode: 'development',
     entry: [
         'react-hot-loader/patch',
         'webpack-hot-middleware/client',
         './src/client/index.local.js'
     ],
     output: {
-        path: path.resolve(__dirname, 'bin'),
+        path: path.resolve(__dirname, 'dist'),
         publicPath: "/my-cool-app",
         filename: 'bundle.js'
     },
+    devtool: 'source-map',
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
+        new webpack.HotModuleReplacementPlugin()
     ],
     module: {
         rules: [
             {
-                test: /\.(js|jsx)$/,
+                test: /\.js$/,
                 exclude: /node_modules/,
                 loader: 'babel-loader',
                 options: {
-                    presets: ['es2015', 'react', 'stage-0']
+                    presets: ['@babel/env', '@babel/react'],
+                    plugins: ['react-hot-loader/babel']
                 }
             }
         ]

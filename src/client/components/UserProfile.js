@@ -1,11 +1,7 @@
-/**
- * Created by jmoor6 on 12/17/16.
- */
-
 import React from 'react';
 import {connect} from 'react-redux';
-import TextField from 'material-ui/TextField';
-import * as userActions from '../actions/userActions';
+import TextField from '@material-ui/core/TextField'
+import { setFirstName, setLastName } from '../actions/userActions';
 
 class UserProfile extends React.Component {
     constructor(props) {
@@ -25,8 +21,8 @@ class UserProfile extends React.Component {
     render(){
         return (
             <div>
-                <TextField id='first-name' hintText="Enter First Name" value={this.props.firstName} onChange={this.handleFirstNameChange}/>
-                <TextField id='last-name' hintText="Enter Last Name" value={this.props.lastName} onChange={this.handleLastNameChange}/>
+                <TextField id='first-name' label='Enter First Name' variant='outlined' value={this.props.firstName} onChange={this.handleFirstNameChange}/>
+                <TextField id='last-name' label='Enter Last Name' variant='outlined' value={this.props.lastName} onChange={this.handleLastNameChange}/>
             </div>
         );
     }
@@ -40,12 +36,9 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = () => {
-    // makes actions available to components vis this.props.xxx
-    return {
-        setFirstName : userActions.setFirstName,
-        setLastName : userActions.setLastName,
-    };
+const mapDispatchToProps = {
+    setFirstName,
+    setLastName
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);

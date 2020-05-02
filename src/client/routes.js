@@ -1,12 +1,14 @@
 import React from 'react';
-import {BrowserRouter} from 'react-router-dom'
-import App from './App';
+import { Router } from '@reach/router'
+import UserProfile from './components/UserProfile'
+import Home from './components/Home'
 
 const Routes = () => {
     return (
-        <BrowserRouter basename='/my-cool-app'>
-            <App/>
-        </BrowserRouter>
+        <Router basepath='/my-cool-app'>
+            <UserProfile path='/nested/profile' />
+            <Home path='/' />
+        </Router>
     );
 };
 

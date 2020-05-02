@@ -1,26 +1,19 @@
-/**
- * Created by jmoor6 on 12/13/16.
- */
-
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Routes from './routes';
+import Routes from './routes'
 import { Provider } from 'react-redux';
 import store from './store';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 
-injectTapEventPlugin();
 
-renderApp(Routes);
-
-function renderApp(Component) {
+const renderApp = Component => {
     ReactDOM.render(
         <Provider store={store}>
-            <Component/>
+            <Component />
         </Provider>,
         document.getElementById('content')
     );
-};
+}
 
+renderApp(Routes);
 
 console.log("Hello World from the Client!");
