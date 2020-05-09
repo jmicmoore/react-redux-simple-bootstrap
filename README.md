@@ -479,12 +479,55 @@ The bundled project is added via \<script\> tag to the template.  The server cre
 
 WARNING!  This topic gets rather involved and may require alot of coffee and reading if you really want to understand it, but delivers awesome results!  This was done following Gearon's "Getting Started" article (linked below) with a few updates (since the article is a bit dated.)
 
-1. Install Webpack Hot Middleware and Webpack Dev Middleware
+1. Install Webpack Dev Middleware
     * From command line
     
         ```
-        npm install webpack-hot-middleware webpack-dev-middleware --save-dev
+        npm install webpack-dev-middleware --save-dev
         ```
+    * Edit webpack.config.js file
+        * webpack-dev-middleware requires output.path to be an absolute path or '/', so make sure output.path looks like the following:              
+            ```javascript
+            output: {
+               path: path.resolve(__dirname, 'dist'),
+               filename: 'bundle.js'
+            }
+            ```        
+    * Edit server.js file
+        * Add webpack-dev-middleware to the Express server.  To keep things consistent, we are pulling in the WebPack config file and using it to configure the new middleware.
+        
+            ```javascript
+            const express = require('express')
+            const webpack = require('webpack');                               // <- add
+            const webpackConfig = require('../../webpack.config');            // <- add
+            const webpackDevMiddleware = require('webpack-dev-middleware');   // <- add
+            const app = express()
+
+
+            const compiler = webpack(webpackConfig);                          // <- add
+            app.use(webpackDevMiddleware(compiler));                          // <- add
+
+            app.set('view engine', 'ejs')
+            app.set('views', 'src/server')
+
+            app.use(express.static('./dist'))
+
+
+            app.get('*', function(req, res) {
+                res.render('index.ejs');
+            });
+
+            app.listen(3000,
+                () => console.log('Express is now listening on port 3000!')
+            )
+
+            ```
+1. Install Webpack Hot Middleware
+    * From command line
+    
+        ```
+        npm install webpack-hot-middleware --save-dev
+        
     * Edit webpack.config.js file
         * Add the following imports:
         
@@ -505,44 +548,21 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
             plugins: [
                new webpack.HotModuleReplacementPlugin(),
             ]
-            ```        
-        * webpack-dev-middleware requires output.path to be an absolute path or '/', so make sure output.path looks like the following:              
-            ```javascript
-            output: {
-               path: path.resolve(__dirname, 'dist'),
-               filename: 'bundle.js'
-            },
             ```
-        * Configure babel-loader with the react-hot-loader plugin:
-            ```javascript
-            module: {
-               rules: [
-                  {
-                     test: /\.js$/,
-                     exclude: /node_modules/,
-                     loader: 'babel-loader',
-                     options: {
-                        presets: ['@babel/env', '@babel/react'],
-                        plugins: ['react-hot-loader/babel'] // <- Add this line HERE!
-                     }
-                  }
-               ]
-            }
-            ```
-    * Edit server.js file
-        * Add webpack-dev-middleware and webpack-hot-middleware to the Express server.  To keep things consistent, we are pulling in the WebPack config file and using it to configure the new middleware.
+        
+        * Add webpack-hot-middleware to the Express server.  To keep things consistent, we are pulling in the WebPack config file and using it to configure the new middleware.
         
             ```javascript
             const express = require('express')
-            const webpack = require('webpack');                               // <- add
-            const webpackConfig = require('../../webpack.config');            // <- add
+            const webpack = require('webpack');
+            const webpackConfig = require('../../webpack.config');
+            const webpackDevMiddleware = require('webpack-dev-middleware');
             const webpackHotMiddleware = require('webpack-hot-middleware');   // <- add
-            const webpackDevMiddleware = require('webpack-dev-middleware');   // <- add
             const app = express()
 
 
-            const compiler = webpack(webpackConfig);                          // <- add
-            app.use(webpackDevMiddleware(compiler));                          // <- add
+            const compiler = webpack(webpackConfig);
+            app.use(webpackDevMiddleware(compiler));
             app.use(webpackHotMiddleware(compiler));                          // <- add
 
             app.set('view engine', 'ejs')
@@ -566,43 +586,86 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
         ```
         npm install react-hot-loader --save-dev
         ```
-    * Edit webpack.config.js file and add one more entry ('react-hot-loader/patch') as the FIRST item in the entry array
+    * Edit webpack.config.js file
+        * Add one more entry ('react-hot-loader/patch') as the FIRST item in the entry array
     
-        ```javascript
-        entry: [
-            'react-hot-loader/patch',           // <- add HERE!
-            'webpack-hot-middleware/client',
-            './src/client/index.js'
-        ],
-        ```
-    * Edit the index.js file
-        * Add the import for AppContainer
             ```javascript
-            import { AppContainer } from 'react-hot-loader';
+            entry: [
+                'react-hot-loader/patch',                         // <- add HERE!
+                'webpack-hot-middleware/client',
+                './src/client/index.js'
+            ],
             ```
-        * Replace this:        
+        
+        * Configure babel-loader with the react-hot-loader plugin:
+        
             ```javascript
-            ReactDOM.render(
-                <App/>,
-                document.getElementById('content')
-            );
+            module: {
+               rules: [
+                  {
+                     test: /\.js$/,
+                     exclude: /node_modules/,
+                     loader: 'babel-loader',
+                     options: {
+                        presets: ['@babel/env', '@babel/react'],
+                        plugins: ['react-hot-loader/babel']       // <- Add this line HERE!
+                     }
+                  }
+               ]
+            }
+            ```
+        
+    * Edit the App.js file
+        * Add the import
+            ```javascript
+            import { hot } from 'react-hot-loader/root';
+            ```
+        * Goto the last line in the file and replace this:        
+            ```javascript
+            export default App;
             ```
         * With this:        
             ```javascript
-            const renderWithHotReload = Component => {
-                ReactDOM.render(
-                    <AppContainer>
-                        <Component />
-                    </AppContainer>,
-                    document.getElementById('content')
-                );
-            }
+            export default hot(App);
+            ```
+1. Install Hook Support for React Hot Loader
+    * **IMPORTANT:**  If you are planning on using React hooks or if you use any 3rd party libraries that use React Hooks (Reach Router), **you will need this**.  If you skip this part and later start getting React Hook-related errors like this:
+        ```javascript
+        react-dom.development.js:14724 Uncaught Error: Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+        1. You might have mismatching versions of React and the renderer (such as React DOM)
+        2. You might be breaking the Rules of Hooks
+        3. You might have more than one copy of React in the same app
+        See https://fb.me/react-invalid-hook-call for tips about how to debug and fix this problem.
+            at Object.throwInvalidHookError (react-dom.development.js:14724)
+            at useMemo (react.development.js:1521)
+            at Provider (Provider.js:10)
+            at ProxyComponent.hotComponentRender (react-hot-loader.development.js:681)
+            at ProxyComponent.proxiedRender (react-hot-loader.development.js:703)
+            at finishClassComponent (react-dom.development.js:17160)
+            at updateClassComponent (react-dom.development.js:17110)
+            at beginWork (react-dom.development.js:18620)
+            at HTMLUnknownElement.callCallback (react-dom.development.js:188)
+            at Object.invokeGuardedCallbackDev (react-dom.development.js:237)
+         ...
+        ```
 
-            renderWithHotReload(App);
-
-            if (module.hot) {
-                module.hot.accept('./App.js', () => { renderWithHotReload(App); })
-            }
+    * Then come back here and perform the following steps:
+    
+    * From command line - be sure to substitute a value for YOUR_REACT_VERSION
+        ```
+        npm install @hot-loader/react-dom@YOUR_REACT_VERSION --save-dev
+        ```
+    
+    * Edit webpack.config.js file
+    
+        * Add the following alias:
+        
+            ```javascript
+            resolve: {
+                alias: {
+                    'react-dom': '@hot-loader/react-dom'
+                }
+            },
             ```
  
 1. Test Hotloading on the Browser.
@@ -629,20 +692,24 @@ WARNING!  This topic gets rather involved and may require alot of coffee and rea
     * Go back to the browser AND DO NOT REFRESH
         * You should see the first name label change to "My First Name:" (sometimes this can take up to 5 seconds to refresh)
         * However the values of the names are get wiped out!  Turns out the ability to do hotloading while saving the DOM state is rather tricky.  I've read several articles on how to do it, but never really go anything to work.  If you figure it out, please feel free to submit a PR!
-    
-## Resources Used for Code Snippets / Configuration
-* [React Hot Loader / Getting Started](https://gaearon.github.io/react-hot-loader/getstarted/)
-* [react-hot-loader](https://github.com/gaearon/react-hot-loader)
-* [react-dev-middleware](https://github.com/webpack/webpack-dev-middleware)
+
+## Troubleshooting
+* There are 4 libs that work together to make hotloading work:  webpack-dev-middleware, webpack-hot-middleware, react-hot-loader, and react-dom.
+If things aren't working correctly, check the following:
+    * Make sure you have installed the most recent version of each library.  Double-check it against the most recent version out on GitHub.
+    * The install instructions change over time. I have sometimes found the ones out on github to be a little out of date.  Go into node_modules and check the latest README.md files there. 
+
+
+## Resources - Background
+* [Webpack Development](https://webpack.js.org/guides/development/)
+* [Hot Module Replacement](https://webpack.js.org/guides/hot-module-replacement/)
+* [React Hot Loader / Getting Started](https://gaearon.github.io/react-hot-loader/getstarted/) (This article is not entirely up to date)
+
+## Resources - Reference
+* [webpack-dev-middleware](https://github.com/webpack/webpack-dev-middleware)
 * [webpack-hot-middleware](https://github.com/webpack-contrib/webpack-hot-middleware)
-
-## Other Related Resources
-
-* [Hot Reloading in React - Article by Dan Abramov](https://medium.com/@dan_abramov/hot-reloading-in-react-1140438583bf#.di3l5wnr4)
-* [Dan Abramov's talk on Hot Reloading with Time Travel](https://www.youtube.com/watch?v=xsSnOQynTHs)
-* [react-hot-boilerplate](https://github.com/gaearon/react-hot-boilerplate)
-* [react-hot-loader-minimal-boilerplate](https://github.com/wkwiatek/react-hot-loader-minimal-boilerplate)
-    
+* [react-hot-loader](https://github.com/gaearon/react-hot-loader)
+* [react-dom](https://github.com/hot-loader/react-dom)
 
 ## Step 8 - Adding React-Redux
 
@@ -670,14 +737,25 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
             import { Provider } from 'react-redux';
             import store from './store';
             ```
-        * Wrap the root component with the Redux store Provider
+        * Replace the below code:
         
             ```javascript
-            <AppContainer>
-                <Provider store={store}>
-                    <Component/>
-                </Provider>
-            </AppContainer>,
+            ReactDOM.render(
+                <App />,
+                document.getElementById('content')
+            );
+            ```
+        
+        * With this code (wrapping the root component with the Redux store Provider)
+        
+            ```javascript
+            ReactDOM.render(
+                <Provider store={store}>              // <- add this
+                    <App />
+                </Provider>,                          // <- add this and don't forget the comma!
+                document.getElementById('content')
+            );
+
             ```
 1. Create a User Reducer to handle mutable state for the first and last names
     * Create a new folder called "reducers" under client
@@ -801,12 +879,12 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
     * Connect the App component to the Redux store, replace this:
     
         ```javascript
-        export default App;
+        export default hot(App);
         ```
     * With this:
     
         ```javascript
-        export default connect(mapStateToProps, mapDispatchToProps)(App);
+        export default hot(connect(mapStateToProps, mapDispatchToProps)(App));
         ```
 
 1. Test in the Browser
@@ -832,7 +910,7 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
 
 ## Step 9 - Adding Routing
 
-1. Install Reach Router
+1. Install Reach Router (uses React Hooks internally)
     * From the command line,
     
        ```
@@ -845,6 +923,21 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
     * If your IDE didn't automatically take care of this for you, then edit UserProfile.js manually
          * Make sure class name and export line at bottom are both using UserProfile instead of App
          * Fix the import of userAction if necessary
+         
+    * Edit UserProfile.js
+        * Remove the react-hot-loader import
+            ```javascript
+            import { hot } from 'react-hot-loader/root'       // <- remove this
+            ```
+            
+        * Replace the existing export
+            ```javascript
+            export default hot(connect(mapStateToProps, mapDispatchToProps)(App));
+            ```
+        * With this
+            ```javascript
+            export default connect(mapStateToProps, mapDispatchToProps)(App);
+            ```
          
 1. Create a Home component
     * From src/client/components folder, create a file called "Home.js" and add the following:
@@ -886,32 +979,41 @@ If some of the structure we create here feels a bit opinionated, don't worry.  Y
 
       export default Routes;
       ```
-1. Adapt the rendering code to use React Router as the root component instead of App.  Make the following changes to the index.js file:
+1. Create a new App.js that serves as the application root, contains the Provider and Routes, and can be exposed as a hot component
+    * From the src/client folder, add a new file called "App.js" and add the following to it:
+    
+        ```javascript
+        import { hot } from 'react-hot-loader/root';
+        import React from 'react';
+        import store from "./store"
+        import Routes from "./routes"
+        import {Provider} from "react-redux"
+        
+        const App = () => {
+           return (
+               <Provider store={store}>
+                   <Routes />
+               </Provider>
+           );
+        };
+        
+        export default hot(App);
+        ```
+        
+1. Adapt the index.js file to remove the redux (Provider) code (we moved it to App.js):
       ```javascript
       import React from 'react';
       import ReactDOM from 'react-dom';
-      import { Provider } from 'react-redux';
-      import store from './store';
-
-      import { AppContainer } from 'react-hot-loader';
-      import Routes from './routes'                      // <- Replace HERE!  Used to be - import App from './App'
-
-      const renderWithHotReload = Component => {
-          ReactDOM.render(
-              <AppContainer>
-                  <Provider store={store}>
-                      <Component />
-                  </Provider>
-              </AppContainer>,
-              document.getElementById('content')
-          );
-      }
-
-      renderWithHotReload(Routes);                       // <- Replace App with Route HERE!
-
-      if (module.hot) {
-          module.hot.accept('./routes.js', () => { renderWithHotReload(Routes); })  // <- Replace HERE!
-      }                                                                             // used to be './App.js' and App
+      import { Provider } from 'react-redux';   // <- remove this
+      import store from './store';              // <- remove this
+      import App from ./App;                    // <- add this
+      
+      ReactDOM.render(
+          <Provider store={store}>              // <- remove this
+              <App />
+          </Provider>,                          // <- remove this and don't forget to move the comma!
+          document.getElementById('content')
+      );
       ```
 1. Test in the Browser
     * If your app is still running in the terminal, you should be able to just switch to your browser and confirm that your app still works.
@@ -941,81 +1043,72 @@ The naming convention for the environments is honestly a bit confusing.
 
 You can name your environment variables anyway you want, but be aware that some libraries (like Express) are looking for the NODE_ENV variable to be given a "production" value so they can optimize things.
 
-1. Split index.js into local and non-local versions
-    * From the src/client folder, copy "index.js" to a new file called "index.local.js"
-    * Edit index.js (the non-local version) and remove the hot loading stuff:
-        * Remove the import for AppContainer
-        * Rename the renderWithHotReload function to renderApp
-        * Remove the entire module.hot.accept hook
-        * Remove the AppContainer element from the ReactDOM.render method.
-        * After these changes, the code should look like the following:
-        
-            ```javascript
-            import React from 'react';
-            import ReactDOM from 'react-dom';
-            import Routes from './routes';
-            import { Provider } from 'react-redux';
-            import store from './store';
-            
-            renderApp(Routes);
-            
-            function renderApp(Component) {
-                ReactDOM.render(
-                    <Provider store={store}>
-                        <Component/>
-                    </Provider>,                         // <- Don't forget to add a comma HERE!
-                    document.getElementById('content')
-                );
-            };
-            
-            
-            console.log("Hello World from the Client!");
-            ```
 1. Split webpack.config.js into local and non-local versions
     * From the root folder, copy "webpack.config.js" to a new file called "webpack.local.config.js"
-    * Edit the webpack.local.config.js
-        * Rename the last file in the "entry" array from:
-        
-            ```javascript
-            './src/client/index.js'
-            ```
-        * to
-        
-            ```javascript
-            './src/client/index.local.js'
-            ```
     * Edit the webpack.config.js (the non-local version) and make the following changes:
-        * Remove the import for webpack
-        * Remove the development mode line
-        * Remove the 'react-hot-loader/patch' and 'webpack-hot-middleware/client' lines from the "entry" field and change it from an array to a string
-        * Remove the HotModuleReplacementPlugin
-        * Remove the "plugins" field (with the react-hot-loader) inside the babel-loader options        
-        * After these changes, the code should look like the following:
-        
-            ```javascript
-            const path = require('path');
-            
-            module.exports = {
-                entry: './src/client/index.js',
-                output: {
-                    path: path.resolve(__dirname, 'dist'),
-                    filename: 'bundle.js'
-                },
-                devtool: 'source-map',
-                module: {
-                    rules: [
-                        {
-                            test: /\.(js|jsx)$/,
-                            exclude: /node_modules/,
-                            loader: 'babel-loader',
-                            options: {
-                                presets: ['@babel/env', '@babel/react']
-                            }
+        ```javascript
+        module.exports = {
+            mode: 'development',                          // <- remove this
+            entry: [
+                'react-hot-loader/patch',                 // <- remove this
+                'webpack-hot-middleware/client',          // <- remove this (you can turn entry back into a string
+                './src/client/index.js'
+            ],
+            output: {
+                path: path.resolve(__dirname, 'dist'),           
+                filename: 'bundle.js'
+            },
+            devtool: 'source-map',                        // <- keep until you've tested it
+            plugins: [                                    // <- remove this
+                new webpack.HotModuleReplacementPlugin()  // <- remove this
+            ],                                            // <- remove this
+            resolve: {                                    // <- remove this
+                alias: {                                  // <- remove this
+                    'react-dom': '@hot-loader/react-dom'  // <- remove this
+                }                                         // <- remove this
+            },                                            // <- remove this
+            module: {
+                rules: [
+                    {
+                        test: /\.js$/,
+                        exclude: /node_modules/,
+                        loader: 'babel-loader',
+                        options: {
+                            presets: ['@babel/env', '@babel/react'],
+                            plugins: ['react-hot-loader/babel']       // <- remove this
                         }
-                    ]
-                }
-            };
-            ```
+                    }
+                ]
+            }
+        };
+        ```
+                
+    * After these changes, the code should look like the following:
+    
+        ```javascript
+        const path = require('path');
+        
+        module.exports = {
+            entry: './src/client/index.js',
+            output: {
+                path: path.resolve(__dirname, 'dist'),
+                filename: 'bundle.js'
+            },
+            devtool: 'source-map',
+            module: {
+                rules: [
+                    {
+                        test: /\.(js|jsx)$/,
+                        exclude: /node_modules/,
+                        loader: 'babel-loader',
+                        options: {
+                            presets: ['@babel/env', '@babel/react']
+                        }
+                    }
+                ]
+            }
+        };
+        ```
 1. Configure scripts section of package.json for local and non-local targets
     * Add the NODE_ENV environment variable to the "local" script (remember "development" means local development ONLY):
     
@@ -1306,7 +1399,7 @@ Most apps don't run from "localhost:3000/", they have the app name as the base p
     ```
     
     
-1. Finally, so the app automatically opens correctly in the browser, up the URL for the opener library.
+1. Finally, so the app automatically opens correctly in the browser, update the URL for the opener library.
     
     * Edit server.js and replace this:
     ```javascript

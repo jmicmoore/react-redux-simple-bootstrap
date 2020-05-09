@@ -6,7 +6,7 @@ module.exports = {
     entry: [
         'react-hot-loader/patch',
         'webpack-hot-middleware/client',
-        './src/client/index.local.js'
+        './src/client/index.js'
     ],
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -17,6 +17,11 @@ module.exports = {
     plugins: [
         new webpack.HotModuleReplacementPlugin()
     ],
+    resolve: {
+        alias: {
+            'react-dom': '@hot-loader/react-dom'
+        }
+    },
     module: {
         rules: [
             {
